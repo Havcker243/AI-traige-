@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { config } from "dotenv";
 import { MongoClient } from "mongodb";
 
@@ -13,18 +12,6 @@ if (!uri) {
 const client = new MongoClient(uri, {
   family: 4
 });
-=======
-import "dotenv/config";
-import { MongoClient } from "mongodb";
-
-const uri = process.env.MONGODB_URI;
-
-if (!uri) {
-  throw new Error("❌ MONGODB_URI is missing from .env");
-}
-
-const client = new MongoClient(uri);
->>>>>>> Stashed changes
 
 export async function connectDB() {
   await client.connect();

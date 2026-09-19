@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-<<<<<<< Updated upstream
-
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
@@ -11,20 +9,13 @@
 
     "types": ["node"],
 
-=======
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "types": ["node"],
->>>>>>> Stashed changes
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "resolveJsonModule": true
   },
-<<<<<<< Updated upstream
 
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
-=======
-  "include": ["src/**/*.ts"]
->>>>>>> Stashed changes
 }
