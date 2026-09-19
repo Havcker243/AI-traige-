@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
 
@@ -6,6 +8,16 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+
+const QUESTION_LIBRARY = fs.readFileSync(
+  path.join(__dirname, 'triage-question-library.txt'),
+  'utf8'
+);
+
+const QUESTION_LIBRARY_MESSAGE = {
+  role: 'system',
+  content: `Reference material below: a library of per-symptom intake questions (onset, severity scales, red-flag sub-questions, relevant history) organized by category. Use it to decide what specific things to ask about for the caller's actual symptom — pull from whichever category matches their chief complaint. Do not read these questions verbatim or in list order; rephrase them in your own natural, conversational voice per your style rules, and only ask what's relevant to this specific caller. This is a reference to draw from, not a script to recite.\n\n${QUESTION_LIBRARY}`
+};
 
 function chatCompletionChunk({ id, model, content, finishReason }) {
   return {
@@ -52,16 +64,45 @@ function sendForcedResponseJson(res, model) {
   });
 }
 
+// Only forward fields OpenAI's API actually accepts. Vapi's request body
+// also carries call/customer/assistant/metadata/timestamp context, which
+// OpenAI rejects outright with a 400 if passed through.
+const OPENAI_ALLOWED_FIELDS = [
+  'model', 'messages', 'stream', 'temperature', 'max_tokens', 'top_p',
+  'frequency_penalty', 'presence_penalty', 'stop', 'n', 'tools', 'tool_choice'
+];
+
+function buildOpenAIBody(reqBody) {
+  const body = {};
+  for (const key of OPENAI_ALLOWED_FIELDS) {
+    if (reqBody[key] !== undefined) body[key] = reqBody[key];
+  }
+
+  if (Array.isArray(body.messages)) {
+    const systemEndIndex = body.messages.findIndex((m) => m.role !== 'system');
+    const insertAt = systemEndIndex === -1 ? body.messages.length : systemEndIndex;
+    body.messages = [
+      ...body.messages.slice(0, insertAt),
+      QUESTION_LIBRARY_MESSAGE,
+      ...body.messages.slice(insertAt)
+    ];
+  }
+
+  return body;
+}
+
 app.post('/chat/completions', async (req, res) => {
   const { messages = [], model = 'gpt-4o-mini', stream = false } = req.body;
 
-  const matchedFlag = checkMessagesForRedFlags(messages);
-
-  if (matchedFlag) {
-    console.log(`[red-flag] matched pattern: ${matchedFlag}`);
-    if (stream) return sendForcedResponseStream(res, model);
-    return sendForcedResponseJson(res, model);
-  }
+  // Hard-coded keyword override disabled — relying on the LLM + the
+  // injected question library (which includes its own red-flag/911
+  // screening questions per category) to handle escalation instead.
+  // const matchedFlag = checkMessagesForRedFlags(messages);
+  // if (matchedFlag) {
+  //   console.log(`[red-flag] matched pattern: ${matchedFlag}`);
+  //   if (stream) return sendForcedResponseStream(res, model);
+  //   return sendForcedResponseJson(res, model);
+  // }
 
   try {
     const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -70,8 +111,15 @@ app.post('/chat/completions', async (req, res) => {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ ...req.body, model })
+      body: JSON.stringify(buildOpenAIBody(req.body))
     });
+
+    if (!upstream.ok) {
+      const errText = await upstream.text();
+      console.error(`[openai error] status ${upstream.status}:`, errText.slice(0, 500));
+      if (stream) return sendForcedResponseStream(res, model);
+      return res.status(upstream.status).send(errText);
+    }
 
     if (stream) {
       res.setHeader('Content-Type', 'text/event-stream');
@@ -87,6 +135,7 @@ app.post('/chat/completions', async (req, res) => {
     }
   } catch (error) {
     console.error('Error proxying to OpenAI:', error);
+    if (stream) return sendForcedResponseStream(res, model);
     res.status(500).json({ error: 'Upstream request failed' });
   }
 });

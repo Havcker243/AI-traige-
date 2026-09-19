@@ -1,0 +1,750 @@
+
+Agent Triage Question Library
+Detailed Initial Assessment Question Sets
+Reference library compiled from the supplied question material. Medical thresholds, wording, and clinical use should be reviewed by qualified clinicians before any patient-facing deployment.
+Library Contents
+General Intake and Safety
+Basic Patient Information
+Emergency / 911 Symptoms
+Behavioral Danger / Threat to Others
+Cardiovascular
+High Blood Pressure
+Low Blood Pressure
+Palpitations / Abnormal Heartbeat
+Respiratory and Infectious
+Difficulty Breathing / Shortness of Breath
+Cough
+Coughing Up Blood / Hemoptysis
+COVID-19 Exposure - Child
+Influenza Follow-Up
+Gastrointestinal
+Abdominal / Stomach Pain
+Stool Color Change
+Vomiting
+Vomiting Blood
+Behavioral Health and Substance Use
+Alcohol Use / Alcohol-Related Concern
+Suicidal Thoughts / Self-Harm Risk
+Injuries, Wounds, and Exposures
+Allergic Reaction
+Animal Bite / Scratch
+Body Fluid Exposure
+Bruising / Easy Bruising
+Burn
+Cast Concern
+Chest Injury
+Nose Injury
+Puncture Wound
+Sting / Envenomation
+Wound Infection
+Wound Infection While Taking Antibiotics
+Neurologic, General, and Musculoskeletal
+Concussion / Mild Traumatic Brain Injury Follow-Up
+Dementia / Change in Cognition
+Dizziness / Vertigo
+Heat-Related Symptoms
+Muscle Aches / Body Pain
+Weakness / Fatigue
+Vision Changes
+Wrist / Hand Pain
+Pregnancy and Reproductive Health
+Birth Control Pill Concern
+STI Exposure
+Vaginal Bleeding
+Pregnancy - Abdominal Injury
+Pregnancy - Abdominal Pain with Fetal Movement Questions
+Pregnancy - Abdominal Pain Alternate Question Set
+Pregnancy - Back Pain
+Pregnancy - Fall
+Pregnancy - Headache
+General and Follow-Up
+General Medical Concern
+Post-Visit / Post-Discharge Concern
+UTI Follow-Up
+
+General Intake and Safety
+Basic Patient Information
+Initial Assessment Questions
+Caller: "Are you calling for yourself or for someone else?" If calling for someone else, ask: "What is your relationship to the patient?"
+Name: "What is the patient's full name?"
+Age: "How old is the patient?" For a young child, collect age in years and months when useful.
+Date Of Birth: "What is the patient's date of birth?"
+Sex / Gender: "What sex was the patient assigned at birth?" Ask gender identity only when relevant to the patient record or care context.
+Callback Number: "What is the best phone number to reach you if the call disconnects?"
+Current Location: "Where are you right now?"
+Height And Weight: "Do you know the patient's approximate height and weight?" Ask when relevant.
+Medical Conditions: "Does the patient have any important medical conditions?"
+Medicines: "What medicines is the patient currently taking?"
+Allergies: "Does the patient have any medication or other serious allergies?" If Yes, ask: "What reaction do they have?"
+Recent Care: "Has the patient recently been in the hospital, had surgery, or seen a doctor for this problem?"
+Available Measurements: "Do you have any recent measurements such as temperature, blood pressure, pulse, oxygen level, or blood sugar?"
+Pregnancy: Ask only when applicable: "Is there any chance you are pregnant?" "When was your last menstrual period?" If pregnant, ask gestational age and estimated due date when relevant.
+Emergency / 911 Symptoms
+Initial Assessment Questions
+Symptoms: "What is the most serious symptom?"
+Airway: "Are they breathing?" (e.g., Yes, No) R/O: airway blockage, respiratory arrest.
+Breathing: "Is there difficulty breathing?" (e.g., Yes, No, Unknown; severity) R/O: respiratory distress.
+Circulation: "Are you (they) feeling weak?" (e.g., Yes, No, Unknown; severity) R/O: shock.
+Bleeding: "Is there any bleeding?" If Yes, ask: "How bad is the bleeding?" (e.g., actively dripping or spurting) R/O: hemorrhage.
+Conscious: "Are they awake and alert?" (e.g., alert-oriented, confused, lethargic, stuporous, comatose) R/O: altered mental status, coma.
+Behavioral Danger / Threat to Others
+Initial Assessment Questions
+Danger Now: "Are you in danger right now?" If Yes, ask: "What is happening right now?"
+Concern: "What happened that made you call today?"
+Injuries: "Is anyone injured?" If Yes, ask: "Please describe them."
+Attempt: "Has your teen (or child) tried to harm anyone?"
+Threat: "Has your teen (or child) threatened to hurt anyone?"
+Onset: "When did the behavior begin?"
+Recurrent Symptoms: "Has your teen (or child) ever done this before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Therapist: "Does your teen have a counselor or therapist?" If Yes, ask: "When was the last time your child was seen? Have you spoken with the counselor regarding your concerns?"
+Current Behavior: "What is your teen (or child) doing right now?"
+Cardiovascular
+High Blood Pressure
+Initial Assessment Questions
+Blood Pressure: "What is your blood pressure?" "Did you take at least two measurements 5 minutes apart?"
+Onset: "When did you take your blood pressure?"
+How: "How did you take your blood pressure?" (e.g., automatic home BP monitor, visiting nurse)
+History: "Do you have a history of high blood pressure?"
+Medicines: "Are you taking any medicines for blood pressure?" "Have you missed any doses recently?"
+Other Symptoms: "Do you have any symptoms?" (e.g., blurred vision, chest pain, difficulty breathing, headache, weakness)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Low Blood Pressure
+Initial Assessment Questions
+Blood Pressure: "What is your blood pressure?" "Did you take at least two measurements 5 minutes apart?"
+Onset: "When did you take your blood pressure?"
+How: "How did you take your blood pressure?" (e.g., visiting nurse, automatic home BP monitor)
+History: "Do you have a history of low blood pressure?" "What is your blood pressure normally?"
+Medicines: "Are you taking any medicines for blood pressure?" If Yes, ask: "Have they been changed recently?"
+Pulse Rate: "Do you know what your pulse rate is?"
+Other Symptoms: "Have you been sick recently?" "Have you had a recent injury?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Palpitations / Abnormal Heartbeat
+Initial Assessment Questions
+Description: "Please describe your heart rate or heartbeat that you are having." (e.g., fast/slow, regular/irregular, skipped or extra beats, palpitations)
+Onset: "When did it start?" (e.g., minutes, hours, days)
+Duration: "How long does it last?" (e.g., seconds, minutes, hours)
+Pattern: "Does it come and go, or has it been constant since it started?" "Does it get worse with exertion?" "Are you feeling it now?"
+Tap: "Using your hand, can you tap out what you are feeling on a chair or table in front of you, so that I can hear?" Not all patients can do this.
+Heart Rate: "Can you tell me your heart rate?" "How many beats in 15 seconds?" Not all patients can do this.
+Recurrent Symptom: "Have you ever had this before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cause: "What do you think is causing the palpitations?"
+Cardiac History: "Do you have any history of heart disease?" (e.g., heart attack, angina, bypass surgery, angioplasty, arrhythmia)
+Other Symptoms: "Do you have any other symptoms?" (e.g., dizziness, chest pain, sweating, difficulty breathing)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Respiratory and Infectious
+Difficulty Breathing / Shortness of Breath
+Initial Assessment Questions
+Respiratory Status: "Describe your breathing." (e.g., wheezing, shortness of breath, unable to speak, severe coughing)
+Onset: "When did this breathing problem begin?"
+Pattern: "Does the difficult breathing come and go, or has it been constant since it started?"
+Severity: "How bad is your breathing?" (e.g., mild, moderate, severe)
+Mild: No SOB at rest, mild SOB with walking, speaks normally in sentences, can lie down, no retractions, pulse < 100.
+Moderate: SOB at rest, SOB with minimal exertion and prefers to sit, cannot lie down flat, speaks in phrases, mild retractions, audible wheezing, pulse 100 to 120.
+Severe: Very SOB at rest, speaks in single words, struggling to breathe, sitting hunched forward, retractions, pulse > 120.
+Recurrent Symptom: "Have you had difficulty breathing before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cardiac History: "Do you have any history of heart disease?" (e.g., heart attack, angina, bypass surgery, angioplasty)
+Lung History: "Do you have any history of lung disease?" (e.g., pulmonary embolus, asthma, emphysema)
+Cause: "What do you think is causing the breathing problem?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., chest pain, cough, dizziness, fever, runny nose)
+O2 Saturation Monitor: "Do you use an oxygen saturation monitor (pulse oximeter) at home?" If Yes, ask: "What is your reading (oxygen level) today?" "What is your usual oxygen saturation reading?" (e.g., 95%)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Travel: "Have you traveled out of the country in the last month?" (e.g., travel history, exposures)
+Cough
+Initial Assessment Questions
+Onset: "When did the cough begin?"
+Severity: "How bad is the cough today?"
+Sputum: "Describe the color of your sputum." (e.g., none, dry cough; clear, white, yellow, green)
+Hemoptysis: "Are you coughing up any blood?" If Yes, ask: "How much?" (e.g., flecks, streaks, tablespoons)
+Difficulty Breathing: "Are you having difficulty breathing?" If Yes, ask: "How bad is it?" (e.g., mild, moderate, severe)
+Mild: No SOB at rest, mild SOB with walking, speaks normally in sentences, can lie down, no retractions, pulse < 100.
+Moderate: SOB at rest, SOB with minimal exertion and prefers to sit, cannot lie down flat, speaks in phrases, mild retractions, audible wheezing, pulse 100 to 120.
+Severe: Very SOB at rest, speaks in single words, struggling to breathe, sitting hunched forward, retractions, pulse > 120.
+Fever: "Do you have a fever?" If Yes, ask: "What is your temperature, how was it measured, and when did it start?"
+Cardiac History: "Do you have any history of heart disease?" (e.g., heart attack, congestive heart failure)
+Lung History: "Do you have any history of lung disease?" (e.g., pulmonary embolus, asthma, emphysema)
+PE Risk Factors: "Do you have a history of blood clots?" Other risk factors include recent major surgery, recent prolonged travel, and being bedridden.
+Other Symptoms: "Do you have any other symptoms?" (e.g., runny nose, wheezing, chest pain)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Travel: "Have you traveled out of the country in the last month?" (e.g., travel history, exposures)
+Coughing Up Blood / Hemoptysis
+Initial Assessment Questions
+Onset: "When did the cough begin?"
+Severity: "How bad is the cough today?" "Did the blood appear after a coughing spell?"
+Sputum: "Describe the color of your sputum." (e.g., none, dry cough; clear, white, yellow, green)
+Hemoptysis: "How much blood?" (e.g., flecks, streaks, tablespoons)
+Difficulty Breathing: "Are you having difficulty breathing?" If Yes, ask: "How bad is it?" (e.g., mild, moderate, severe)
+Mild: No SOB at rest, mild SOB with walking, speaks normally in sentences, can lie down, no retractions, pulse < 100.
+Moderate: SOB at rest, SOB with minimal exertion and prefers to sit, cannot lie down flat, speaks in phrases, mild retractions, audible wheezing, pulse 100 to 120.
+Severe: Very SOB at rest, speaks in single words, struggling to breathe, sitting hunched forward, retractions, pulse > 120.
+Fever: "Do you have a fever?" If Yes, ask: "What is your temperature, how was it measured, and when did it start?"
+Cardiac History: "Do you have any history of heart disease?" (e.g., heart attack, congestive heart failure)
+Lung History: "Do you have any history of lung disease?" (e.g., pulmonary embolus, asthma, emphysema)
+PE Risk Factors: "Do you have a history of blood clots?" Other risk factors include recent major surgery, recent prolonged travel, and being bedridden.
+Other Symptoms: "Do you have any other symptoms?" (e.g., runny nose, wheezing, chest pain)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Travel: "Have you traveled out of the country in the last month?" (e.g., travel history, exposures)
+COVID-19 Exposure - Child
+Initial Assessment Questions
+Covid-19 Patient: "Who is the person with confirmed or suspected COVID-19 infection that your child was exposed to?"
+Place Of Contact: "Where was your child when they were exposed to the patient?" (e.g., home, school, child care)
+Type Of Contact: "What type of contact was there?" (e.g., talking to, sitting next to, same room, same building) Source note: within 6 feet (2 meters) for 15 minutes is considered close contact.
+Duration Of Contact: "How long were you or your child in contact with the COVID-19 patient?" (e.g., minutes, hours, live with the patient) Source note: a total of 15 minutes or more over a 24-hour period is considered close contact.
+Mask: "Was your child wearing a mask?" Source note: wearing a mask reduces the risk of an otherwise close contact.
+Date Of Contact: "When did your child have contact with a COVID-19 patient?" (e.g., how many days ago)
+Symptoms: "Does your child have any symptoms?" No symptoms required to use this question set.
+Higher Risk For Complications With Covid-19: "Does your child have any chronic medical problems?" (e.g., heart or lung disease, diabetes, asthma, cancer, weak immune system)
+Vaccines: "Is your child vaccinated against COVID-19?" If eligible, ask: "Have they received a booster shot?"
+Influenza Follow-Up
+Initial Assessment Questions
+Diagnosis Confirmation: "When was the influenza diagnosed?" "By whom?" "Did you get a test for it?"
+Influenza Medicines: "Were you prescribed any medicines for the influenza?" (e.g., zanamivir [Relenza], oseltamivir [Tamiflu])
+Symptoms: "What is your main symptom or concern?" (e.g., cough, fever, shortness of breath, muscle aches)
+Onset: "When did the symptoms start?"
+Cough: "Do you have a cough?" If Yes, ask: "How bad is the cough?"
+Fever: "Do you have a fever?" If Yes, ask: "What is your temperature, how was it measured, and when did it start?"
+Breathing Difficulty: "Are you having any difficulty breathing?" (e.g., normal; shortness of breath, wheezing, unable to speak)
+High Risk For Complications: "Do you have any chronic medical problems?" (e.g., asthma, heart or lung disease, obesity, weak immune system)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+O2 Saturation Monitor: "Do you use an oxygen saturation monitor (pulse oximeter) at home?" If Yes, ask: "What is your reading (oxygen level) today?" "What is your usual oxygen saturation reading?" (e.g., 95%)
+Gastrointestinal
+Abdominal / Stomach Pain
+Initial Assessment Questions
+Location: "Where does it hurt?"
+Radiation: "Does the pain shoot anywhere else?" (e.g., chest, back)
+Onset: "When did the pain begin?" (e.g., minutes, hours or days ago)
+Sudden: "Gradual or sudden onset?"
+Pattern: "Does the pain come and go, or is it constant?" Comes and goes means the pain is intermittent and goes away completely between bouts. Constant means the pain never goes away completely.
+If It Comes And Goes: "How long does it last?" "Do you have pain now?"
+If Constant: "Is it getting better, staying the same, or getting worse?"
+Severity: "How bad is the pain?" (e.g., Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Recurrent Symptom: "Have you ever had this type of stomach pain before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cause: "What do you think is causing the stomach pain?" (e.g., gallstones, recent abdominal surgery)
+Relieving/Aggravating Factors: "What makes it better or worse?" (e.g., antacids, bending or twisting motion, bowel movement)
+Other Symptoms: "Do you have any other symptoms?" (e.g., back pain, diarrhea, fever, urination pain, vomiting)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Stool Color Change
+Initial Assessment Questions
+Color: "What color is your stool?" "Is that color in part or all of the stool?" (e.g., black, clay-colored, green, red)
+Onset: "When did you first notice this color change?"
+Cause: "Have you eaten any food or taken any medicine of this color?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., abdomen pain, diarrhea, fever, yellow eyes or skin)
+Vomiting
+Initial Assessment Questions
+Vomiting Severity: "How many times have you vomited in the past 24 hours?"
+Mild: 1 to 2 times/day.
+Moderate: 3 to 5 times/day, decreased oral intake without significant weight loss or symptoms of dehydration.
+Severe: 6 or more times/day, vomits everything or nearly everything, with significant weight loss or symptoms of dehydration.
+Onset: "When did the vomiting begin?"
+Fluids: "What fluids or food have you vomited up today?" "Have you been able to keep any fluids down?"
+Abdomen Pain: "Are you having any abdomen pain?" If Yes, ask: "How bad is it and what does it feel like?" (e.g., crampy, dull, intermittent, constant)
+Diarrhea: "Is there any diarrhea?" If Yes, ask: "How many times today?"
+Contacts: "Is there anyone else in the family with the same symptoms?"
+Cause: "What do you think is causing your vomiting?"
+Hydration Status: "Any signs of dehydration?" (e.g., dry mouth [not only dry lips], too weak to stand) "When did you last urinate?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., fever, headache, vertigo, vomiting blood or coffee grounds, recent head injury)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Vomiting Blood
+Initial Assessment Questions
+Appearance Of Blood: "What does the blood look like?" (e.g., pink, red blood, coffee-grounds)
+Amount: "How much blood was lost?" (e.g., few streaks or strands, tablespoon, cup)
+Vomiting Blood: "How many times did it happen?" or "How many times in the past 24 hours?"
+Vomiting Without Blood: "How many times in the past 24 hours?"
+Onset: "When did vomiting of blood begin?"
+Cause: "What do you think is causing the vomiting of blood?"
+Blood Thinners: "Do you take any blood thinners?" (e.g., aspirin, clopidogrel / Plavix, warfarin / Coumadin, heparin) Other strong blood thinners listed in the source include Arixtra (fondaparinux), Eliquis (apixaban), Pradaxa (dabigatran), and Xarelto (rivaroxaban).
+Dehydration: "Are there any signs of dehydration?" "When was the last time you urinated?" "Do you feel dizzy?"
+Abdomen Pain: "Are you having any abdomen pain?" If Yes, ask: "What does it feel like?" (e.g., crampy, dull, intermittent, constant)
+Diarrhea: "Is there any diarrhea?" If Yes, ask: "How many times today?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., fever, blood in stool)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Behavioral Health and Substance Use
+Alcohol Use / Alcohol-Related Concern
+Initial Assessment Questions
+Alcohol Use: "Do you drink alcohol, including beer, wine or hard liquor?"
+How Often: "How many days per week do you typically drink alcohol?"
+How Much: "How many drinks do you typically have on days when you drink?" (1.5 oz hard liquor [one shot or jigger; 45 ml], 5 oz wine [small glass; 150 ml], 12 oz beer [one can; 360 ml])
+Most: "What is the most that you have had to drink on any one occasion in the last month?"
+Last 24 Hours: "Have you had a drink within the last 24 hours?"
+Drinking Problem: "Do you have or have you ever had an alcohol drinking problem?"
+Drug Problem: "Are you using any other drugs?" (e.g., cocaine, prescription medicines)
+Symptoms: "What symptoms are you currently experiencing?" (e.g., none, tremors or shakiness, abdomen pain, vomiting, blackout spells)
+Treatment Program: "Have you ever gone through an alcohol use treatment program?"
+Therapist: "Do you have a counselor or therapist?" If Yes, ask: "What is their name?"
+Support: "Who is with you now?" "Who do you live with?" "Do you have family or friends who you can talk to?" "Are you a member of Alcoholics Anonymous?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Suicidal Thoughts / Self-Harm Risk
+Initial Assessment Questions
+Main Concern: "What happened that made you call today?"
+Risk Of Harm - Suicidal Ideation: "Do you ever have thoughts of hurting or killing yourself?" (e.g., yes, no, no but preoccupation with thoughts about death)
+Wish To Be Dead: "Have you wished you were dead or wished you could go to sleep and not wake up?"
+Intent: "Have you had any thoughts of hurting or killing yourself?" If Yes, continue.
+Plan: "Have you thought about how you might do this?" "Do you have a specific plan for how you would do this?" (e.g., gun, knife, overdose, no plan)
+Access: If there is a plan, ask: "Do you have access to it?" (e.g., pills, gun in house, knife in kitchen)
+Risk Of Harm - Suicide Attempt: "Have you tried to harm yourself recently?" If Yes, ask: "When was this?" "What type of harm was tried?"
+Risk Of Harm - Suicidal Behavior: "Have you ever done anything, started to do anything, or prepared to do anything to end your life?" (e.g., collected pills, bought a gun, wrote a suicide note, cut yourself, started but changed your mind)
+Events And Stressors: "Has there been any new stress or recent changes in your life?" (e.g., death of loved one, homelessness, negative event, relationship breakup, work)
+Functional Impairment: "How have things been going for you overall? Have you had more difficulty than usual doing your normal daily activities?" (e.g., better, same, worse; self-care, school, work, interactions)
+Support: "Who is with you now?" "Who do you live with?" "Do you have family or friends who you can talk to?"
+Therapist: "Do you have a counselor or therapist?" If Yes, ask: "What is their name?"
+Alcohol Use Or Substance Use: "Do you drink alcohol or use any illegal drugs, or prescription drugs in ways other than prescribed?"
+Other: "Do you have any other physical symptoms right now?" (e.g., fever)
+Pregnancy Or Postpartum: "Is there any chance you are pregnant?" "When was your last menstrual period?" "Were you recently pregnant?" "When did you give birth?"
+Injuries, Wounds, and Exposures
+Allergic Reaction
+Initial Assessment Questions
+Symptoms: "What is the most serious symptom?"
+Airway: "Are they breathing?" (e.g., Yes, No) R/O: airway blockage, respiratory arrest.
+Breathing: "Is there difficulty breathing?" (e.g., Yes, No; wheezing, unable to complete a sentence) R/O: respiratory distress.
+Circulation: "Are you feeling weak?" (e.g., Yes, No, Unknown; severity) If Yes, ask: "Can you stand and walk normally?" R/O: shock.
+Swallowing: "Can you swallow?" (e.g., Yes, No; food, fluid, saliva)
+Onset: "When did the reaction start?" (e.g., minutes, hours ago)
+Substance: "What are you reacting to?" "When did the contact occur?"
+Previous Reaction: "Have you ever reacted to it before?" If Yes, ask: "What happened that time?"
+Epinephrine: "Do you have an epinephrine autoinjector (e.g., EpiPen) or epinephrine nasal spray (Neffy)?"
+Animal Bite / Scratch
+Initial Assessment Questions
+Appearance: "What does it look like?" (e.g., abrasion, bruise, puncture)
+Size: "How big is the bite?" (e.g., inches, cm; or compare to size of coin, pea, grape, ping pong ball)
+Location: "Where is the bite located?"
+Onset: "When did the bite happen?" (e.g., minutes, hours ago)
+Animal: "What type of animal caused the bite?" "Is the injury from a bite or a claw?" If dog or cat, ask: "Was it a pet or a stray?" "Was it acting ill or behaving strangely?"
+Rabies Vaccine: For dog or cat bites: "Do you know if the pet is vaccinated against rabies?" (e.g., yes, no, overdue for rabies shot, unknown)
+Circumstances: "Tell me how this happened."
+Tetanus: "When was your last tetanus booster?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Body Fluid Exposure
+Initial Assessment Questions
+Description: "Please describe what happened." (e.g., spitting, splash, touching)
+Type And Amount Of Fluid: "What type of body fluid was it and how much?" (e.g., saliva, blood, vomit; a few drops, a splash)
+Route Of Exposure: "What part of your body was exposed?" (e.g., eye, mouth, intact skin)
+Date-Time Of Exposure: "When did this exposure occur?"
+Source Person HIV Positive: "Is the other person HIV positive?" (e.g., yes, no, unknown)
+Source Person Hepatitis Positive: "Is the other person hepatitis positive?" (e.g., yes, no, unknown)
+Bruising / Easy Bruising
+Initial Assessment Questions
+Appearance Of Bruise: "Describe the bruise."
+Size: "How large is the bruise?"
+Number: "How many bruises are there?"
+Location: "Where is the bruise located?"
+Onset: "How long ago did the bruise occur?"
+Cause: "What do you think caused the bruise?"
+Medical History: "Do you have any medical problems that can cause easy bruising or bleeding?" (e.g., leukemia, liver disease, recent chemotherapy)
+Blood Thinners: "Do you take any blood thinners?" (e.g., aspirin, clopidogrel / Plavix, warfarin / Coumadin, heparin) Other strong blood thinners listed in the source include Arixtra (fondaparinux), Eliquis (apixaban), Pradaxa (dabigatran), and Xarelto (rivaroxaban).
+Other Symptoms: "Do you have any other symptoms?" (e.g., weakness, dizziness, pain, fever, nosebleed, blood in urine/stool)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Burn
+Initial Assessment Questions
+Onset: "When did it happen?" If it happened less than 3 hours ago, ask: "Did you apply cool water?"
+Location: "Where is the burn located?"
+Burn Size: "How large is the burn?" Source note: the palm, not including fingers, is roughly 0.5% of total body surface area.
+Severity Of The Burn: "Are there any blisters?" "What size are they?" (e.g., quarter equals 1 inch or 2.5 cm) "Are any of the blisters broken, open, or wrinkled?"
+Mechanism: "Tell me how it happened."
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Inhalation Injury: "Were you inside an enclosed space with heat and smoke?" If Yes, ask: "Do you have any cough or difficulty breathing?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., headache, nausea)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Cast Concern
+Initial Assessment Questions
+Cast Location: "Where is the cast?" (e.g., left lower leg, right arm)
+Cast Symptom: "What is the main symptom you are concerned about?" (e.g., color change, numbness, pain)
+Onset: "When did the symptom start?" "Is it getting worse?"
+When Casted: "When was the cast put on?"
+Injury: "What is the underlying injury?" (e.g., fracture, torn ligament, surgery)
+Pain: "Is there any pain?" If Yes, ask: "How bad is it?" (Scale 1-10; or mild, moderate, severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities (e.g., work or school) or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Other Symptoms: "Do you have any other symptoms?" (e.g., difficulty breathing, fever)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Chest Injury
+Initial Assessment Questions
+Mechanism: "How did the injury happen?"
+Onset: "When did the injury happen?" (e.g., minutes, hours, days ago)
+Location: "Where on the chest is the injury located?"
+Appearance: "What does the injury look like?"
+Bleeding: "Is there any bleeding now?" If Yes, ask: "How long has it been bleeding?"
+Severity: "Any difficulty with breathing?"
+Size: For cuts, bruises, or swelling: "How large is it?" (e.g., inches or centimeters)
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Tetanus: For any breaks in the skin: "When was your last tetanus booster?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Nose Injury
+Initial Assessment Questions
+Mechanism: "How did the injury happen?"
+Onset: "When did the injury happen?" (e.g., minutes, hours ago)
+Location: "What part of the nose is injured?"
+Appearance Of Injury: "What does the nose look like?"
+Bleeding: "Is the nose still bleeding?" If Yes, ask: "Is it difficult to stop?"
+Size: For cuts, bruises, or swelling: "How large is it?" (e.g., inches or centimeters; entire nose)
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain and patient unable to do normal activities.
+Tetanus: For any breaks in the skin: "When was your last tetanus booster?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., headache, neck pain, loss of consciousness)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Puncture Wound
+Initial Assessment Questions
+Location: "Where is the puncture located?"
+Object: "What was the object that punctured the skin?"
+Depth: "How deep do you think the puncture goes?"
+Onset: "When did the injury occur?" (e.g., minutes, hours)
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Foreign Body Sensation: "Did any of the object stay in the skin?" "Do you feel like something is still in the wound?"
+Tetanus: "When was your last tetanus booster?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Sting / Envenomation
+Initial Assessment Questions
+Location: "Where on your body were you stung?"
+Onset: "When did the sting occur?"
+Pain: "Is there any pain?" If Yes, ask: "How bad is it?" (Scale 1-10; or mild, moderate, severe)
+Numbness: "Is there any numbness or tingling?" If Yes, ask: "Is it just in the sting area?"
+Cranial Nerves: "Any problem with seeing, swallowing, or breathing?"
+Skeletal Muscle: "Do you have any muscle twitching or jerking?"
+State Or Province: "Where were you when the sting occurred?" (e.g., name of state, province)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., rapid eye movements, unusual sweating, vomiting)
+Wound Infection
+Initial Assessment Questions
+Location: "Where is the wound located?"
+Wound Appearance: "What does the wound look like?"
+Size: If redness is present: "What is the size of the red area?" (e.g., inches, centimeters, or compare to size of a coin)
+Spread: "What has changed in the last day?" "Do you see any red streaks coming from the wound?"
+Onset: "When did it start to look infected?"
+Mechanism: "How did the wound start, what was the cause?"
+Pain: "Do you have any pain?" If Yes, ask: "How bad is the pain?" (Scale 1-10; mild, moderate, severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Fever: "Do you have a fever?" If Yes, ask: "What is your temperature, how was it measured, and when did it start?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., shaking chills, weakness, rash elsewhere on body)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Wound Infection While Taking Antibiotics
+Initial Assessment Questions
+Symptom: "What is the main symptom you are concerned about?" (e.g., redness, swelling, pain, fever, weakness)
+Wound Infection Location: "Where is the wound infection located?" (e.g., arm, face, foot, knee, leg)
+Wound Infection Size: "What is the size of the red area?" (e.g., inches, centimeters; compare to size of a coin)
+Better-Same-Worse: "Are you getting better, staying the same, or getting worse compared to the day you started the antibiotics?"
+Pain: "Do you have any pain?" If Yes, ask: "How bad is the pain?" (Scale 1-10; mild, moderate, severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Fever: "Do you have a fever?" If Yes, ask: "What is it, how was it measured and when did it start?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., pus coming from a wound, red streaks, weakness)
+Diagnosis Date: "When was the wound infection diagnosed?" "By whom?"
+Antibiotic Name: "What antibiotic(s) are you taking?" "How many times a day?"
+Antibiotic Date: "When was the antibiotic started?"
+Follow-Up Appointment: "Do you have a follow-up appointment with your doctor?"
+Neurologic, General, and Musculoskeletal
+Concussion / Mild Traumatic Brain Injury Follow-Up
+Initial Assessment Questions
+Symptoms: "What symptom are you most concerned about?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., nausea, difficulty concentrating)
+Onset / Pattern: "Are you the same, getting better, or getting worse?" "What has changed?"
+Headache: "Do you have any headache pain?" If Yes, ask: "How bad is it?" (Scale 0-10; none or mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities (e.g., work or school) or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+MTBI: "When did your head injury happen?" "How did it occur?"
+MTBI Diagnosis: "Who diagnosed your concussion?"
+MTBI Testing: "Did you have a CT scan or MRI of your head?"
+MTBI Last Visit: "When were you last seen for your head injury?"
+Medicines: "Did you receive any prescription medicines?" If Yes, ask: "What are they?" "Were any over-the-counter medicines recommended?"
+Dementia / Change in Cognition
+Initial Assessment Questions
+Main Concern Or Symptom: "What is your main concern right now?" "What questions do you have?" "What is the main symptom you are worried about?" (e.g., confusion, memory loss)
+Onset: "When did the symptom start or worsen?" (minutes, hours, days, weeks)
+Better-Same-Worse: "Are you getting better, staying the same, or getting worse compared to the day you were diagnosed or most recent hospital discharge?"
+Diagnosis: "Was the dementia diagnosed by a doctor?" If Yes, ask: "When?" (e.g., days, months, years ago)
+Medicines: "Has there been any change in medicines recently?" (e.g., narcotics, antihistamines, benzodiazepines)
+Other Symptoms: "Are there any other symptoms?" (e.g., cough, falling, fever, pain)
+Support: "What type of support do you have?" Document living circumstances and support (e.g., family, nursing home).
+Dizziness / Vertigo
+Initial Assessment Questions
+Description: "Describe your dizziness."
+Lightheaded: "Do you feel lightheaded?" (e.g., somewhat faint, woozy, weak upon standing)
+Vertigo: "Do you feel like either you or the room is spinning or tilting?"
+Severity: "How bad is it?" "Do you feel like you are going to faint?" "Can you stand and walk?"
+Mild: Feels slightly dizzy, but walking normally.
+Moderate: Feels unsteady when walking, but not falling; interferes with normal activities (e.g., school, work).
+Severe: Unable to walk without falling, or requires assistance to walk without falling; feels like passing out now.
+Onset: "When did the dizziness begin?"
+Aggravating Factors: "Does anything make it worse?" (e.g., standing, change in head position)
+Heart Rate: "Can you tell me your heart rate?" "How many beats in 15 seconds?" Not all patients can do this.
+Cause: "What do you think is causing the dizziness?" (e.g., decreased fluids or food, diarrhea, emotional distress, heat exposure, new medicine, sudden standing, vomiting; unknown)
+Recurrent Symptom: "Have you had dizziness before?" If Yes, ask: "When was the last time?" "What happened that time?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., fever, chest pain, vomiting, diarrhea, bleeding)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Heat-Related Symptoms
+Initial Assessment Questions
+Symptoms: "What symptoms are you concerned about?"
+Onset: "When did the symptoms start?"
+Fever: "Do you have a fever?" If Yes, ask: "What is it, how was it measured, and when did it start?"
+Heat Exposure: "What caused you to become hot?" (e.g., outside in the sun, inside a hot room)
+Physical Activity: "What type of physical activity were you doing?" (e.g., working, sports)
+Sick: "Have you been sick recently?" (e.g., cold, flu, recent fever)
+Other Symptoms: "Do you have any other symptoms?" (e.g., fainting, flushed skin, weakness, nausea, vomiting, muscle cramps)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Muscle Aches / Body Pain
+Initial Assessment Questions
+Onset: "When did the muscle aches or body pains start?"
+Location: "What part of your body is hurting?" (e.g., entire body, arms, legs)
+Severity: "How bad is the pain?" (Scale 1-10; or mild, moderate, severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Cause: "What do you think is causing the pains?"
+Fever: "Do you have a fever?" If Yes, ask: "What is your temperature, how was it measured, and when did it start?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., chest pain, cold or flu symptoms, rash, weakness, weight loss)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Travel: "Have you traveled out of the country in the last month?" (e.g., exposures, travel history)
+Weakness / Fatigue
+Initial Assessment Questions
+Description: "Describe how you are feeling."
+Severity: "How bad is it?" "Can you stand and walk?"
+Mild (0-3): Feels weak or tired, but does not interfere with work, school or normal activities.
+Moderate (4-7): Able to stand and walk; weakness interferes with work, school, or normal activities.
+Severe (8-10): Unable to stand or walk; unable to do usual activities.
+Onset: "When did these symptoms begin?" (e.g., hours, days, weeks, months)
+Cause: "What do you think is causing the weakness or fatigue?" (e.g., not drinking enough fluids, medical problem, trouble sleeping)
+New Medicines: "Have you started on any new medicines recently?" (e.g., opioid pain medicines, benzodiazepines, muscle relaxants, antidepressants, antihistamines, neuroleptics, beta blockers)
+Other Symptoms: "Do you have any other symptoms?" (e.g., chest pain, fever, cough, SOB, vomiting, diarrhea, bleeding, other areas of pain)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Vision Changes
+Initial Assessment Questions
+Description: "How has your vision changed?" (e.g., complete vision loss, blurred vision, double vision, floaters)
+Location: "One or both eyes?" If one, ask: "Which eye?"
+Severity: "Can you see anything?" If Yes, ask: "What can you see?" (e.g., fine print)
+Onset: "When did this begin?" "Did it start suddenly or has this been gradual?"
+Pattern: "Does this come and go, or has it been constant since it started?"
+Pain: "Is there any pain in your eye(s)?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Contacts-Glasses: "Do you wear contacts or glasses?"
+Cause: "What do you think is causing this visual problem? Has this ever happened before?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., confusion, headache, arm or leg weakness, speech problems)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Wrist / Hand Pain
+Initial Assessment Questions
+Onset: "When did the pain start?"
+Location: "Where is the pain located?"
+Pain: "How bad is the pain?" (Scale 1-10; or mild, moderate, severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities (e.g., work or school) or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to use wrist or hand at all.
+Work Or Exercise: "Has there been any recent work or exercise that involved this part of the body?"
+Cause: "What do you think is causing the pain?"
+Aggravating Factors: "What makes the pain worse?" (e.g., using computer)
+Other Symptoms: "Do you have any other symptoms?" (e.g., fever, neck pain, numbness or tingling, rash, swelling)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Pregnancy and Reproductive Health
+Birth Control Pill Concern
+Initial Assessment Questions
+Type: "What is the name of the birth control pill you are using?"
+Pack Type: "How do you take your birth control pill?"
+28-Day Cycle/Pack: Takes an active hormone pill days 1-21 and placebo pill on days 22-28.
+28-Day Cycle / 21-Day Pack: Takes an active hormone pill days 1-21, followed by a pill-free week.
+3-Month Cycle/Pack: Takes an active pill for 3 months, followed by pill-free week or placebo week.
+Continuous: Takes an active hormone pill every day, continuously.
+Start Date: "When did you first start taking this birth control pill?"
+Symptom: "What is the main symptom or question you are concerned about?"
+Onset: "When did the symptom start?"
+Vaginal Bleeding: "Are you having any unusual vaginal bleeding?"
+None: No bleeding.
+Spotting: Spotting, or pinkish / brownish mucous discharge; does not fill panty liner or pad.
+Mild: Less than 1 pad / hour; less than patient's usual menstrual bleeding.
+Moderate: 1 to 2 pads / hour; 1 menstrual cup every 6 hours; small-medium blood clots (e.g., pea, grape, small coin) for over 6 hours.
+Severe: Soaking 2 or more pads/hour for 2 or more hours; 1 menstrual cup every 2 hours; bleeding not contained by pads or continuous red blood from vagina; large blood clots (e.g., golf ball, large coin).
+Abdomen Or Pelvic Pain: "Are you having any pain in your abdomen or pelvic area?" (Scale 0-10; or none, mild, moderate, or severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Missed Or Late Pills: "Did you miss or take any pills late?" If Yes, ask: "When? How many pills?" Source note: pill is considered missed if taken more than 24 hours later than scheduled time.
+Pregnancy: "Are you concerned you might be pregnant?" "When was your last menstrual period?"
+Follow-Up Appointment: "Do you have a follow-up appointment?"
+STI Exposure
+Initial Assessment Questions
+Main Concern: "What were you exposed to?" "What sexually transmitted infection (STI) does your sex partner have?" (e.g., gonorrhea, herpes, HIV, pubic lice)
+Route Of Exposure: "How were you exposed to the STI?" (e.g., oral, vaginal, or rectal intercourse)
+Date Of Exposure: "When did the exposure occur?" (e.g., days)
+Symptoms: "Do you have any symptoms?" (e.g., pain with urination, rash, sores)
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Vaginal Bleeding
+Initial Assessment Questions
+Bleeding Severity: "Describe the bleeding that you are having." "How much bleeding is there?"
+Spotting: Spotting, or pinkish / brownish mucous discharge; does not fill panty liner or pad.
+Mild: Less than 1 pad / hour; less than patient's usual menstrual bleeding.
+Moderate: Soaking 1 pad / hour for over 6 hours; 1 menstrual cup every 6 hours; small-medium blood clots (e.g., pea, grape, small coin) for over 6 hours.
+Severe: Soaking 2 or more pads/hour for 2 or more hours; 1 menstrual cup every 2 hours; bleeding not contained by pads or continuous red blood from vagina; large blood clots (e.g., golf ball, large coin).
+Onset: "When did the bleeding begin?" "Is it continuing now?"
+Menstrual Period: "When was the last normal menstrual period?" "How is this different than your period?"
+Regularity: "How regular are your periods?"
+Abdomen Pain: "Do you have any pain?" "How bad is the pain?" (Scale 0-10; none, mild, moderate, or severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+Breastfeeding: "Are you breastfeeding?"
+Hormone Medicines: "Are you taking any hormone medicines, prescription or over-the-counter?" (e.g., birth control pills, estrogen)
+Blood Thinners: "Do you take any blood thinners?" (e.g., aspirin, clopidogrel / Plavix, warfarin / Coumadin, heparin) Other strong blood thinners listed in the source include Arixtra (fondaparinux), Eliquis (apixaban), Pradaxa (dabigatran), and Xarelto (rivaroxaban).
+Cause: "What do you think is causing the bleeding?" (e.g., recent gyn surgery, recent gyn procedure, known bleeding disorder, cervical cancer, polycystic ovarian disease, fibroids)
+Hemodynamic Status: "Are you weak or feeling lightheaded?" If Yes, ask: "Can you stand and walk normally?"
+Other Symptoms: "What other symptoms are you having with the bleeding?" (e.g., passed tissue, vaginal discharge, fever, menstrual-type cramps)
+Pregnancy - Abdominal Injury
+Initial Assessment Questions
+Mechanism: "How did the injury happen?"
+Domestic Violence Screening: "Did you fall because someone pushed you or tried to hurt you?"
+Onset: "When did the injury happen?" (e.g., minutes or hours ago) "Are you in danger right now?"
+Location: "What part of the stomach (belly) is injured?" (e.g., above or below the belly button, right or left)
+Appearance Of Injury: "What does the injury look like?" (e.g., bruising, cuts, scrapes, swelling)
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; none, mild, moderate, or severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Size: For cuts, bruises, or swelling: "How large is it?" (e.g., inches or centimeters)
+Other Symptoms: "Do you have any other symptoms?" (e.g., contractions, leaking fluid, vaginal bleeding)
+Tetanus: For any breaks in the skin: "When was your last tetanus booster?"
+EDD: "What date are you expecting to deliver?"
+Fetal Movement: "Has the baby's movement decreased or changed a lot from what you usually feel?"
+Pregnancy - Abdominal Pain with Fetal Movement Questions
+Initial Assessment Questions
+Location: "Where does it hurt?"
+Radiation: "Does the pain shoot anywhere else?" (e.g., chest, back)
+Onset: "When did the pain begin?" (e.g., minutes, hours or days ago)
+Sudden: "Gradual or sudden onset?"
+Pattern: "Does the pain come and go, or has it been constant since it started?"
+Severity: "How bad is the pain?" "What does it keep you from doing?" (Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Recurrent Symptom: "Have you ever had this type of stomach pain before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cause: "What do you think is causing the stomach pain?"
+Relieving/Aggravating Factors: "What makes it better or worse?" (e.g., antacids, bowel movement, movement)
+Fetal Movement: "Has the baby's movement decreased or changed a lot from what you usually feel?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., back pain, contractions, diarrhea, fever, headache, urination pain, vaginal bleeding, vaginal discharge, vomiting)
+EDD: "What date are you expecting to deliver?"
+Pregnancy - Abdominal Pain Alternate Question Set
+Initial Assessment Questions
+Location: "Where does it hurt?"
+Radiation: "Does the pain shoot anywhere else?" (e.g., chest, back, shoulder)
+Onset: "When did the pain begin?" (e.g., minutes, hours or days ago)
+Sudden: "Gradual or sudden onset?"
+Pattern: "Does the pain come and go, or has it been constant since it started?"
+Severity: "How bad is the pain?" "What does it keep you from doing?" (Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Does not interfere with normal activities, abdomen soft and not tender to touch.
+Moderate (4-7): Interferes with normal activities or awakens from sleep, abdomen tender to touch.
+Severe (8-10): Excruciating pain, doubled over, unable to do any normal activities.
+Recurrent Symptom: "Have you ever had this type of stomach pain before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cause: "What do you think is causing the stomach pain?"
+Relieving/Aggravating Factors: "What makes it better or worse?" (e.g., antacids, bowel movement, movement)
+Other Symptoms: "Do you have any other symptoms?" (e.g., back pain, diarrhea, fever, urination pain, vaginal bleeding, vaginal discharge, vomiting)
+EDD: "What date are you expecting to deliver?"
+Pregnancy - Back Pain
+Initial Assessment Questions
+Onset: "When did the pain begin?"
+Location: "Where does it hurt?" (e.g., upper, mid or lower back)
+Severity: "How bad is the pain?" (Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Pattern: "Is the pain constant?" (e.g., yes, no; constant, intermittent)
+Radiation: "Does the pain shoot into your legs or somewhere else?"
+Cause: "What do you think is causing the back pain?"
+Back Overuse: "Any recent lifting of heavy objects, strenuous work or exercise?"
+Medicines: "What have you taken so far for the pain?" (e.g., nothing, acetaminophen)
+Neurologic Symptoms: "Do you have any weakness, numbness, or new problems with bowel or bladder control?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., abdomen pain, blood in urine, fever, fluid leaking from vagina, pain with urination)
+EDD: "What date are you expecting to deliver?"
+Pregnancy - Fall
+Initial Assessment Questions
+Mechanism: "How did the fall happen?"
+Domestic Violence Screening: "Did you fall because someone pushed you or tried to hurt you?"
+Onset: "When did the fall happen?" (e.g., minutes, hours, or days ago)
+Location: "What part of the body hit the ground?" (e.g., back, buttocks, head, hips, knees, hands, stomach)
+Injury: "Did you get hurt when you fell? Are there any obvious injuries?" If Yes, ask: "What does the injury look like?"
+Pain: "Is there any pain?" If Yes, ask: "How bad is the pain?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Size: For cuts, bruises, or swelling: "How large is it?" (e.g., inches or centimeters)
+EDD: "What date are you expecting to deliver?"
+Fetal Movement: "Has the baby's movement decreased or changed a lot from what you usually feel?"
+Tetanus: For any breaks in the skin: "When was your last tetanus booster?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., abdomen pain, contractions, leaking of fluid from vagina or concerned water broke, vaginal bleeding)
+Pregnancy - Headache
+Initial Assessment Questions
+Location: "Where does it hurt?"
+Onset: "When did the headache start?" (e.g., minutes, hours or days)
+Pattern: "Does the pain come and go, or has it been constant since it started?"
+Severity: "How bad is the pain?" and "What does it keep you from doing?" (Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Worst Headache (10+): "Worst headache" of life.
+Recurrent Symptom: "Have you ever had headaches before?" If Yes, ask: "When was the last time?" and "What happened that time?"
+Cause: "What do you think is causing the headache?"
+Migraine: "Have you been diagnosed with migraine headaches?" If Yes, ask: "Is this headache similar?"
+Head Injury: "Has there been any recent injury to your head?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., abdomen pain, blurred vision, fever, stiff neck; swelling of hands, face, or feet)
+Pregnancy: "How many weeks pregnant are you?"
+EDD: "What date are you expecting to deliver?"
+General and Follow-Up
+General Medical Concern
+Initial Assessment Questions
+Reason For Call: "What is the main reason for your call?" or "How can I best help you?"
+Symptoms: "Do you have any symptoms?"
+Other Questions: "Do you have any other questions?"
+Post-Visit / Post-Discharge Concern
+Initial Assessment Questions
+Main Concern Or Symptom: "What is your main concern right now?" "What question do you have?" "What is the main symptom you are worried about?" (e.g., breathing difficulty, cough, fever, pain)
+Onset: "When did the symptom start?"
+Better-Same-Worse: "Are you getting better, staying the same, or getting worse compared to how you felt at your last visit to the doctor?"
+Visit Date: "When were you seen?" (e.g., date)
+Visit Doctor: "What is the name of the doctor taking care of you now?"
+Visit Diagnosis: "What was the main symptom or problem that you were seen for?" "Were you given a diagnosis?"
+Visit Medicines: "Did the doctor order any new medicines for you to use?" If Yes, ask: "Have you filled the prescription and started taking the medicine?"
+Next Appointment: "Have you scheduled a follow-up appointment with your doctor?"
+Pain: "Is there any pain?" If Yes, ask: "How bad is it?" (Scale 0-10; or none, mild, moderate, severe)
+None (0): No pain.
+Mild (1-3): Does not interfere with normal activities.
+Moderate (4-7): Interferes with normal activities or awakens from sleep.
+Severe (8-10): Excruciating pain, unable to do any normal activities.
+Fever: "Do you have a fever?" If Yes, ask: "What is it, how was it measured and when did it start?"
+Other Symptoms: "Do you have any other symptoms?"
+Pregnancy: "Is there any chance you are pregnant?" "When was your last menstrual period?"
+UTI Follow-Up
+Initial Assessment Questions
+Main Symptom: "What is the main symptom you are concerned about?" (e.g., painful urination, urine frequency)
+Better-Same-Worse: "Are you getting better, staying the same, or getting worse compared to how you felt at your last visit to the doctor?"
+Pain: "How bad is the pain?" (Scale 1-10; mild, moderate, or severe)
+Mild (1-3): Complains slightly about urination hurting.
+Moderate (4-7): Interferes with normal activities.
+Severe (8-10): Excruciating, unwilling or unable to urinate because of the pain.
+Fever: "Do you have a fever?" If Yes, ask: "What is it, how was it measured, and when did it start?"
+Other Symptoms: "Do you have any other symptoms?" (e.g., blood in the urine, flank pain, vaginal discharge)
+Diagnosis: "When was the UTI diagnosed?" "By whom?" "Was it a kidney infection, bladder infection or both?"
+Antibiotic: "What antibiotic(s) are you taking?" "How many times per day?"
+Antibiotic - Start Date: "When did you start taking the antibiotic?"
