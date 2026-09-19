@@ -9,9 +9,7 @@ if (!uri) {
   throw new Error("MONGODB_URI is missing from .env");
 }
 
-const client = new MongoClient(uri, {
-  family: 4
-});
+const client = new MongoClient(uri);
 
 export async function connectDB() {
   await client.connect();
