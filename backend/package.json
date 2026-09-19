@@ -1,21 +1,18 @@
 {
-<<<<<<< Updated upstream
-=======
+  "name": "agent-triage-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "dotenv": "^18.0.1",
     "mongodb": "^7.6.0"
   },
->>>>>>> Stashed changes
   "devDependencies": {
     "@types/node": "^26.6.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
-<<<<<<< Updated upstream
-  },
-  "dependencies": {
-    "dotenv": "^18.0.1",
-    "mongodb": "^7.6.0"
-=======
->>>>>>> Stashed changes
   }
 }
