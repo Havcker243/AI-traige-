@@ -8,7 +8,7 @@ const DOCTOR_EMAIL = process.env.DOCTOR_EMAIL || 'dolapoadegbesan301@gmail.com';
 function buildCaseNotes({ messages, bookingStart, callerPhone, patient = {} }) {
   const transcript = messages
     .filter((m) => m.role === 'user' || m.role === 'assistant')
-    .map((m) => `${m.role === 'user' ? 'Caller' : 'Sarah'}: ${m.content}`)
+    .map((m) => `${m.role === 'user' ? 'Caller' : 'David'}: ${m.content}`)
     .join('\n');
 
   const whenText = bookingStart
