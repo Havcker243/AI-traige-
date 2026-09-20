@@ -173,9 +173,14 @@ export function applyEvent(calls, event) {
       call.speaking = null;
       break;
     case 'call.summary':
+      call.status = 'ended';
+      call.endedAt = call.endedAt || event.ts;
       call.endReason = d.reason || call.endReason;
       call.summary = d.summary || call.summary;
       call.durationSeconds = d.durationSeconds ?? call.durationSeconds;
+      call.activeStage = null;
+      call.activeTool = null;
+      call.speaking = null;
       break;
     default:
       break;
