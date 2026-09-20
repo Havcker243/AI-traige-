@@ -5,7 +5,8 @@ const express = require('express');
 const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
 const { createBooking } = require('./cal-booking');
 const { sendDoctorNotes } = require('./doctor-notes');
-const { sendBookingConfirmation, normalizePhone } = require('./agentphone-sms');
+const { sendBookingConfirmation, normalizePhone } = require('./twilio-sms');
+const { sendPatientConfirmationEmail } = require('./patient-notification');
 const {
   upsertTranscript, savePatientInfo, recordBooking, recordDisposition,
   recordEndOfCallReport, getPatientInfo, listCalls, getCall
@@ -41,7 +42,7 @@ function parseJson(value) {
 function trackDb(op, callId, action) {
   if (!process.env.MONGODB_URI) {
     emitEvent('db.skipped', callId, { op, reason: 'MongoDB not configured' });
-    return Promise.resolve();
+    return Promise.resolve(action()).catch(() => false);
   }
   let operation;
   try {
@@ -51,7 +52,10 @@ function trackDb(op, callId, action) {
     return Promise.resolve();
   }
   return Promise.resolve(operation)
-    .then(() => emitEvent('db.saved', callId, { op }))
+    .then((result) => {
+      emitEvent('db.saved', callId, { op });
+      return result;
+    })
     .catch((error) => {
       emitEvent('db.failed', callId, { op, error: error.message });
       throw error;
@@ -231,7 +235,8 @@ async function callOpenAI(body) {
 
 async function executeTool(toolCall, context, dependencies = {}) {
   const deps = {
-    createBooking, sendDoctorNotes, sendBookingConfirmation, savePatientInfo, recordBooking, recordDisposition, getPatientInfo,
+    createBooking, sendDoctorNotes, sendBookingConfirmation, sendPatientConfirmationEmail,
+    savePatientInfo, recordBooking, recordDisposition, getPatientInfo,
     ...dependencies
   };
   let args;
@@ -242,10 +247,16 @@ async function executeTool(toolCall, context, dependencies = {}) {
   }
 
   if (toolCall.function.name === 'save_patient_info') {
-    trackDb('patient', context.callId, () => deps.savePatientInfo(context.callId, {
-      name: args.name, age: args.age, sex: args.sex, phone: args.phone, address: args.address
-    })).catch((err) => console.error('[db] save_patient_info failed:', err.message));
-    return JSON.stringify({ success: true });
+    try {
+      const saved = await trackDb('patient', context.callId, () => deps.savePatientInfo(context.callId, {
+        name: args.name, age: args.age, sex: args.sex, phone: args.phone, address: args.address
+      }));
+      if (saved === false) return JSON.stringify({ success: false, error: 'Patient information could not be stored.' });
+      return JSON.stringify({ success: true });
+    } catch (err) {
+      console.error('[db] save_patient_info failed:', err.message);
+      return JSON.stringify({ success: false, error: 'Patient information could not be stored. Do not claim it was saved.' });
+    }
   }
 
   if (toolCall.function.name === 'set_disposition') {
@@ -279,6 +290,7 @@ async function executeTool(toolCall, context, dependencies = {}) {
         .catch((err) => console.error('[doctor-notes] send failed:', err.message));
       trackDb('booking', context.callId, () => deps.recordBooking(context.callId, booking))
         .catch((err) => console.error('[db] recordBooking failed:', err.message));
+      deps.sendPatientConfirmationEmail(booking).catch((err) => console.error('[patient-notification] send failed:', err.message));
 
       let sms;
       try {

@@ -61,6 +61,7 @@ test('booking success survives SMS failure and passes only confirmed number for 
   const result = JSON.parse(await executeTool(tool({ smsConsent: true, smsPhone: input.to }), context, {
     createBooking: async () => { bookings++; return booking; },
     sendDoctorNotes: async () => {},
+    sendPatientConfirmationEmail: async () => {},
     sendBookingConfirmation: async (args) => { assert.equal(args.to, '+12025550101'); throw new Error('SMS failure'); }
   }));
   assert.equal(result.success, true);
@@ -73,6 +74,7 @@ test('booking failure never sends an SMS', async () => {
   const result = JSON.parse(await executeTool(tool({ smsConsent: true, smsPhone: input.to }), context, {
     createBooking: async () => { throw new Error('No slots'); },
     sendDoctorNotes: async () => {},
+    sendPatientConfirmationEmail: async () => {},
     sendBookingConfirmation: async () => { sent = true; }
   }));
   assert.equal(result.success, false);
@@ -92,6 +94,7 @@ test('declining SMS still allows booking and SMS module skips the send', async (
   const result = JSON.parse(await executeTool(tool({ smsConsent: false }), context, {
     createBooking: async () => booking,
     sendDoctorNotes: async () => {},
+    sendPatientConfirmationEmail: async () => {},
     sendBookingConfirmation
   }));
   assert.equal(result.success, true);

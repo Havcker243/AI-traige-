@@ -30,7 +30,7 @@ const NODES = {
   knowledge: { x: col(3), y: ROW[1], title: 'Triage protocol', sub: 'Question library' },
   mongo: { x: col(4), y: ROW[1], title: 'Call records', sub: 'MongoDB Atlas' },
   cal: { x: col(5), y: ROW[1], title: 'Appointments', sub: 'Cal.com' },
-  sms: { x: col(6), y: ROW[1], title: 'Text message', sub: 'AgentPhone' },
+  sms: { x: col(6), y: ROW[1], title: 'Text message', sub: 'Twilio' },
   mail: { x: col(5), y: ROW[2], title: 'Doctor email', sub: 'AgentMail' }
 };
 const WIRES = [
