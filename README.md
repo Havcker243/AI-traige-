@@ -29,13 +29,27 @@ Then copy an API key from each service and place them in the `.env` file in this
 npm install
 ```
 
-## 3) Create the assistant
+## 3) Start the local safety-net server
+
+This project includes a local proxy that forwards calls to OpenAI and adds the emergency red-flag safety layer.
+
+```bash
+npm start
+```
+
+The local endpoint is exposed at:
+
+```text
+http://localhost:3000/chat/completions
+```
+
+## 4) Create the assistant
 
 ```bash
 node create-assistant.js
 ```
 
-This prints the created assistant ID.
+This prints the created assistant ID. It expects `SAFETY_NET_URL` in your `.env` file to point to the local proxy above.
 
 ## 4) Attach a claimed Vapi number to the assistant
 
@@ -64,10 +78,12 @@ VAPI_API_KEY=
 DEEPGRAM_API_KEY=
 ELEVENLABS_API_KEY=
 OPENAI_API_KEY=
+SAFETY_NET_URL=http://localhost:3000/chat/completions
 ```
 
 No quotes are needed around the values.
 
+<<<<<<< Updated upstream
 ## Appointment confirmation texts (AgentPhone)
 
 The existing Cal.com booking tool now sends an appointment confirmation through
@@ -99,3 +115,6 @@ not implement inbound text replies or booking through SMS.
 
 Run `npm test` for mocked tests; these do not create appointments, send emails,
 or send real messages. Live SMS delivery still needs a real-device test.
+=======
+`SAFETY_NET_URL` is the endpoint that Vapi calls for the voice assistant model. In local development, it should point to the safety-net server running in this repo.
+>>>>>>> Stashed changes

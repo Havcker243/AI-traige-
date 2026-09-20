@@ -6,7 +6,10 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
+<<<<<<< Updated upstream
     "test": "node --test test/*.test.js",
+=======
+>>>>>>> Stashed changes
     "create-assistant": "node create-assistant.js",
     "attach-number": "node attach-number.js"
   },
