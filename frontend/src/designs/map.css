@@ -17,7 +17,7 @@
 .mp-actions { display: flex; gap: 8px; }
 
 .mp-map { padding: 20px 28px 0; }
-.mp-map svg { width: 100%; height: auto; max-height: 46vh; display: block; }
+.mp-map svg { width: 100%; height: auto; max-height: 54vh; display: block; }
 .mp-link path { fill: none; stroke: var(--line); stroke-width: 2; transition: stroke .3s; }
 .mp-link.done path { stroke: currentColor; opacity: .45; }
 .mp-link.hot path { stroke: currentColor; stroke-width: 3; opacity: 1; stroke-dasharray: 8 6; animation: mp-dash .5s linear infinite; }

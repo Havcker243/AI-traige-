@@ -6,31 +6,34 @@ import './map.css';
 const FALLBACK_CONFIG = { voice: { provider: 'vapi', voiceId: 'Elliot' }, transcriber: { provider: 'deepgram', model: 'nova-2-general' }, model: { provider: 'custom-llm', model: 'gpt-4o-mini' }, transferNumber: '' };
 
 const COLORS = {
-  caller: '#0ea5e9', vapi: '#8b5cf6', stt: '#f59e0b', proxy: '#334155', llm: '#10b981', tts: '#ec4899',
-  mongo: '#16a34a', cal: '#2563eb', sms: '#0d9488', mail: '#ea580c', transfer: '#dc2626'
+  caller: '#0ea5e9', vapi: '#8b5cf6', stt: '#f59e0b', tunnel: '#64748b', proxy: '#334155', llm: '#10b981', tts: '#ec4899',
+  knowledge: '#a16207', mongo: '#16a34a', cal: '#2563eb', sms: '#0d9488', mail: '#ea580c', transfer: '#dc2626'
 };
 
 // How long a link keeps "flowing" after the last piece of information crossed it.
 const FLOW_MS = 2600;
 
-// Node layout in a 1200 x 400 viewBox. Main chain on the top row, services on the bottom row.
-const W = 150; const H = 64;
+// Every node: plain-English role on top, the actual technology underneath.
+const W = 150; const H = 68; const GAP = 175; const ROW = [40, 240, 400];
+const col = (i) => 10 + i * GAP;
 const NODES = {
-  caller: { x: 20, y: 60, title: 'Caller', sub: 'Phone' },
-  vapi: { x: 215, y: 60, title: 'Vapi', sub: 'Telephony' },
-  stt: { x: 410, y: 60, title: 'Speech-to-text', sub: '' },
-  proxy: { x: 605, y: 60, title: 'Safety-net proxy', sub: 'server.js' },
-  llm: { x: 800, y: 60, title: 'OpenAI', sub: '' },
-  tts: { x: 1020, y: 60, title: 'Voice', sub: '' },
-  mongo: { x: 410, y: 280, title: 'MongoDB', sub: 'call records' },
-  cal: { x: 605, y: 280, title: 'Cal.com', sub: 'appointment booking' },
-  sms: { x: 800, y: 280, title: 'AgentPhone', sub: 'SMS confirmation' },
-  mail: { x: 1020, y: 280, title: 'AgentMail', sub: 'doctor handoff email' },
-  transfer: { x: 20, y: 280, title: 'Operator', sub: 'warm transfer' }
+  caller: { x: col(0), y: ROW[0], title: 'Caller', sub: 'Phone call' },
+  vapi: { x: col(1), y: ROW[0], title: 'Phone agent', sub: 'Vapi' },
+  stt: { x: col(2), y: ROW[0], title: 'Speech-to-text', sub: '' },
+  tunnel: { x: col(3), y: ROW[0], title: 'Secure tunnel', sub: 'ngrok' },
+  proxy: { x: col(4), y: ROW[0], title: 'Triage brain', sub: 'Node.js · Express' },
+  llm: { x: col(5), y: ROW[0], title: 'AI reasoning', sub: '' },
+  tts: { x: col(6), y: ROW[0], title: 'Text-to-speech', sub: '' },
+  transfer: { x: col(1), y: ROW[1], title: 'Live operator', sub: '' },
+  knowledge: { x: col(3), y: ROW[1], title: 'Triage protocol', sub: 'question library · prompt' },
+  mongo: { x: col(4), y: ROW[1], title: 'Call records', sub: 'MongoDB Atlas' },
+  cal: { x: col(5), y: ROW[1], title: 'Appointments', sub: 'Cal.com' },
+  sms: { x: col(6), y: ROW[1], title: 'SMS confirmation', sub: 'AgentPhone' },
+  mail: { x: col(5), y: ROW[2], title: 'Doctor handoff', sub: 'AgentMail (email)' }
 };
 const LINKS = [
-  ['caller', 'vapi'], ['vapi', 'stt'], ['stt', 'proxy'], ['proxy', 'llm'], ['llm', 'tts'],
-  ['proxy', 'mongo'], ['proxy', 'cal'], ['cal', 'sms'], ['cal', 'mail'], ['vapi', 'transfer']
+  ['caller', 'vapi'], ['vapi', 'stt'], ['stt', 'tunnel'], ['tunnel', 'proxy'], ['proxy', 'llm'], ['llm', 'tts'],
+  ['knowledge', 'proxy'], ['proxy', 'mongo'], ['proxy', 'cal'], ['cal', 'sms'], ['cal', 'mail'], ['vapi', 'transfer']
 ];
 
 function center(id, side) {
@@ -44,7 +47,8 @@ function center(id, side) {
 function path(a, b) {
   const A = NODES[a]; const B = NODES[b];
   if (A.y === B.y) { const [x1, y1] = center(a, 'right'); const [x2, y2] = center(b, 'left'); return `M${x1},${y1} L${x2},${y2}`; }
-  const [x1, y1] = center(a, 'bottom'); const [x2, y2] = center(b, 'top');
+  const down = A.y < B.y;
+  const [x1, y1] = center(a, down ? 'bottom' : 'top'); const [x2, y2] = center(b, down ? 'top' : 'bottom');
   const my = (y1 + y2) / 2;
   return `M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`;
 }
@@ -62,7 +66,7 @@ function activity(call) {
   }
   if (t === 'transfer.returned') return { node: 'transfer', link: 'vapi-transfer' };
   if (t?.startsWith('db.')) return { node: 'mongo', link: 'proxy-mongo' };
-  const map = { caller: ['caller', 'caller-vapi'], vapi: ['vapi', 'caller-vapi'], stt: ['stt', 'vapi-stt'], proxy: ['proxy', 'stt-proxy'], llm: ['llm', 'proxy-llm'], tts: ['tts', 'llm-tts'] };
+  const map = { caller: ['caller', 'caller-vapi'], vapi: ['vapi', 'caller-vapi'], stt: ['stt', 'vapi-stt'], proxy: ['proxy', 'tunnel-proxy'], llm: ['llm', 'proxy-llm'], tts: ['tts', 'llm-tts'] };
   const m = map[call.activeStage];
   return m ? { node: m[0], link: m[1] } : { node: null, link: null };
 }
@@ -73,16 +77,17 @@ function linksFor(e) {
   switch (e.type) {
     case 'call.started': return ['caller-vapi'];
     case 'speech': return d.role === 'user' ? ['caller-vapi', 'vapi-stt'] : ['llm-tts', 'caller-vapi'];
-    case 'transcript': return d.role === 'user' ? ['vapi-stt', 'stt-proxy'] : ['llm-tts'];
-    case 'turn.received': return ['stt-proxy'];
-    case 'llm.request': case 'llm.response': return ['proxy-llm'];
+    case 'transcript': return d.role === 'user' ? ['vapi-stt', 'stt-tunnel'] : ['llm-tts'];
+    case 'turn.received': return ['stt-tunnel', 'tunnel-proxy', 'knowledge-proxy'];
+    case 'llm.request': return ['knowledge-proxy', 'proxy-llm'];
+    case 'llm.response': return ['proxy-llm'];
     case 'tool.started': case 'tool.finished':
       if (d.name === 'book_appointment') return e.type === 'tool.finished' ? ['proxy-cal', 'cal-sms', 'cal-mail'] : ['proxy-cal'];
       if (d.name === 'transferCall') return ['vapi-transfer'];
       return ['proxy-mongo'];
     case 'db.saved': case 'db.failed': case 'db.skipped': return ['proxy-mongo'];
     case 'transfer.returned': return ['proxy-llm', 'vapi-transfer'];
-    case 'response.sent': return ['proxy-llm', 'llm-tts'];
+    case 'response.sent': return ['proxy-llm', 'tunnel-proxy', 'llm-tts'];
     case 'call.ended': return ['caller-vapi'];
     default: return [];
   }
@@ -104,8 +109,8 @@ function visited(call) {
   if (!call) return s;
   for (const e of call.events) {
     if (e.type === 'call.started') s.add('caller').add('vapi');
-    if (e.type === 'transcript' || e.type === 'turn.received') s.add('stt').add('proxy');
-    if (e.type === 'llm.request') s.add('llm');
+    if (e.type === 'transcript' || e.type === 'turn.received') s.add('stt').add('tunnel').add('proxy');
+    if (e.type === 'llm.request') s.add('llm').add('knowledge');
     if (e.type === 'response.sent') s.add('tts');
     if (e.type === 'db.saved') s.add('mongo');
     if (e.type === 'tool.finished' && e.data?.name === 'book_appointment' && e.data?.success) s.add('cal');
@@ -162,10 +167,10 @@ export default function MapDesign({ onSwitch }) {
   };
 
   const subFor = (id) => ({
-    stt: labels.stt,
-    llm: labels.llm,
+    stt: `${labels.stt}${labels.sttModel ? ` · ${labels.sttModel.replace('-general', '')}` : ''}`,
+    llm: `OpenAI · ${labels.llm}`,
     tts: `${labels.voice}${labels.voiceId ? ` · ${labels.voiceId}` : ''}`,
-    transfer: labels.transferNumber || 'warm transfer'
+    transfer: labels.transferNumber ? `Vapi transfer · ${labels.transferNumber}` : 'Vapi warm transfer'
   })[id] ?? NODES[id].sub;
 
   const p = call?.patient || {};
@@ -184,7 +189,7 @@ export default function MapDesign({ onSwitch }) {
       </header>
 
       <section className="mp-map">
-        <svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1220 480" preserveAspectRatio="xMidYMid meet">
           <defs>
             {[['idle', '#d9dee7'], ...Object.entries(COLORS)].map(([id, fill]) => (
               <marker key={id} id={`mp-arrow-${id}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill={fill} /></marker>
@@ -214,8 +219,8 @@ export default function MapDesign({ onSwitch }) {
               <g key={id} className={`mp-node ${hot ? 'hot' : done ? 'done' : ''}`} style={{ color: COLORS[id] }} transform={`translate(${n.x},${n.y})`}>
                 <rect className="mp-node-bar" width="6" height={H} rx="3" />
                 <rect width={W} height={H} rx="12" />
-                <text x={W / 2} y="27" textAnchor="middle" className="mp-node-title">{n.title}</text>
-                <text x={W / 2} y="47" textAnchor="middle" className="mp-node-sub">{subFor(id)}</text>
+                <text x={W / 2 + 3} y="28" textAnchor="middle" className="mp-node-title">{n.title}</text>
+                <text x={W / 2 + 3} y="49" textAnchor="middle" className="mp-node-sub">{subFor(id)}</text>
               </g>
             );
           })}
