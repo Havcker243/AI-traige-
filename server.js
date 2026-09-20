@@ -39,6 +39,10 @@ function parseJson(value) {
 }
 
 function trackDb(op, callId, action) {
+  if (!process.env.MONGODB_URI) {
+    emitEvent('db.skipped', callId, { op, reason: 'MongoDB not configured' });
+    return Promise.resolve();
+  }
   let operation;
   try {
     operation = action();

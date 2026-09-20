@@ -2,6 +2,15 @@ const { setTimeout: sleep } = require('node:timers/promises');
 const { emitEvent } = require('./events');
 const { TEST_TRANSFER_NUMBER } = require('./transfer-config');
 
+// Clinic-local (America/New_York) wall-clock hour tomorrow, as a UTC instant.
+function clinicLocalTomorrowAt(hour) {
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(tomorrow);
+  const guess = new Date(`${day}T${String(hour).padStart(2, '0')}:00:00Z`);
+  const offsetMinutes = (new Date(guess.toLocaleString('en-US', { timeZone: 'America/New_York' })) - guess) / 60000;
+  return new Date(guess.getTime() - offsetMinutes * 60000);
+}
+
 async function simulateCall({ scenario, delayMs = 900, emit = emitEvent, callId: requestedCallId } = {}) {
   if (!['routine', 'emergency'].includes(scenario)) {
     throw new Error('scenario must be routine or emergency');
@@ -88,8 +97,7 @@ async function simulateCall({ scenario, delayMs = 900, emit = emitEvent, callId:
       name: 'book_appointment',
       args: { callerName: 'Jamie Lee', smsConsent: true, smsPhone: '+1 555 010 0200' }
     });
-    const appointmentTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    appointmentTime.setHours(10, 0, 0, 0);
+    const appointmentTime = clinicLocalTomorrowAt(10);
     await step('tool.finished', {
       name: 'book_appointment',
       success: true,
