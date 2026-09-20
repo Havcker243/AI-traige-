@@ -6,6 +6,8 @@ const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
 const { createBooking } = require('./cal-booking');
 const { sendDoctorNotes } = require('./doctor-notes');
 const { sendBookingConfirmation, normalizePhone } = require('./agentphone-sms');
+const { upsertTranscript, savePatientInfo, recordBooking, recordDisposition, recordEndOfCallReport, getPatientInfo } = require('./db');
+const { validateTransfer } = require('./transfer-config');
 
 const BOOKING_INSTRUCTIONS = {
   role: 'system',
@@ -84,7 +86,7 @@ const BOOK_APPOINTMENT_TOOL = {
   type: 'function',
   function: {
     name: 'book_appointment',
-    description: "Books a real same-day/routine appointment for the caller on the practice's calendar. Only call this after the caller has explicitly agreed to book, and you have their name.",
+    description: "Books the next available routine appointment after today. Never a same-day visit or emergency service. Only call after explicit agreement to book and collection of the caller's name.",
     parameters: {
       type: 'object',
       properties: {
@@ -97,9 +99,47 @@ const BOOK_APPOINTMENT_TOOL = {
   }
 };
 
-// We always resolve tool calls ourselves (never forward `tools`/`stream` to
-// OpenAI directly) so we can execute book_appointment and feed the result
-// back in, regardless of what Vapi's own request shape asks for.
+const SAVE_PATIENT_INFO_TOOL = {
+  type: 'function',
+  function: {
+    name: 'save_patient_info',
+    description: "Saves caller details you've collected so far (name, age, sex assigned at birth, phone number, address) to the case record. Call this as soon as you learn any of these, even partially — during the normal intake (step 5) and always during an emergency (step 4A) once you have the address/callback number. Safe to call multiple times as you learn more; only pass the fields you actually have.",
+    parameters: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: "The caller's name." },
+        age: { type: 'string', description: "The caller's age, as given." },
+        sex: { type: 'string', description: "Sex assigned at birth, only if you actually asked (per step 5, only when relevant to the symptom)." },
+        phone: { type: 'string', description: 'A callback or contact number the caller gave, including country code if known. Save whatever they say even if unconfirmed for SMS purposes.' },
+        address: { type: 'string', description: "The caller's current street address, including apartment/unit if given." }
+      }
+    }
+  }
+};
+
+const SET_DISPOSITION_TOOL = {
+  type: 'function',
+  function: {
+    name: 'set_disposition',
+    description: "Records the triage outcome for this call. Call this once you reach step 4A (emergency) or step 9 (disposition) — as soon as you know the classification, not at the end of the call. Safe to call again if the classification changes as the conversation continues.",
+    parameters: {
+      type: 'object',
+      properties: {
+        disposition: {
+          type: 'string',
+          enum: ['emergency', 'routine'],
+          description: "emergency = step 4A triggered by a red flag. routine = everything else (booking is offered regardless of how mild)."
+        },
+        chiefComplaint: { type: 'string', description: "A short (5-10 word) summary of the main symptom/reason for the call, e.g. 'sudden severe headache' or 'ankle sprain after fall'." }
+      },
+      required: ['disposition']
+    }
+  }
+};
+
+const LOCAL_TOOL_NAMES = new Set(['book_appointment', 'save_patient_info', 'set_disposition']);
+
+// Execute local tools here; return the configured transfer tool to Vapi.
 function buildOpenAIBody(reqBody, extraTools) {
   const body = {};
   for (const key of OPENAI_ALLOWED_FIELDS) {
@@ -117,8 +157,16 @@ function buildOpenAIBody(reqBody, extraTools) {
     ];
   }
 
-  if (extraTools && extraTools.length) {
-    body.tools = extraTools;
+  // Vapi injects its own native tools (e.g. transferCall, configured on the assistant
+  // itself) into the incoming request's `tools` field — those must be preserved and
+  // passed straight through, alongside the tools we add ourselves, or a native tool
+  // call would silently vanish from the model's options.
+  const incomingTools = Array.isArray(reqBody.tools)
+    ? reqBody.tools.filter(t => t.type === 'function' && t.function?.name === 'transferCall') : [];
+  const combinedTools = [...incomingTools, ...(extraTools || [])];
+  if (combinedTools.length) {
+    body.tools = [...new Map(combinedTools.map(t => [t.function.name, t])).values()];
+    body.parallel_tool_calls = false;
   }
 
   return body;
@@ -142,8 +190,36 @@ async function callOpenAI(body) {
   return res.json();
 }
 
-async function executeTool(toolCall, context, dependencies = { createBooking, sendDoctorNotes, sendBookingConfirmation }) {
-  const args = JSON.parse(toolCall.function.arguments || '{}');
+async function executeTool(toolCall, context, dependencies = {}) {
+  const deps = {
+    createBooking, sendDoctorNotes, sendBookingConfirmation, savePatientInfo, recordBooking, recordDisposition, getPatientInfo,
+    ...dependencies
+  };
+  let args;
+  try { args = JSON.parse(toolCall.function.arguments || '{}'); }
+  catch { return JSON.stringify({ success: false, error: 'Invalid tool arguments; supply a JSON object.' }); }
+  if (!args || typeof args !== 'object' || Array.isArray(args)) {
+    return JSON.stringify({ success: false, error: 'Tool arguments must be an object.' });
+  }
+
+  if (toolCall.function.name === 'save_patient_info') {
+    deps.savePatientInfo(context.callId, {
+      name: args.name, age: args.age, sex: args.sex, phone: args.phone, address: args.address
+    }).catch((err) => console.error('[db] save_patient_info failed:', err.message));
+    return JSON.stringify({ success: true });
+  }
+
+  if (toolCall.function.name === 'set_disposition') {
+    if (!['emergency', 'routine'].includes(args.disposition)) {
+      return JSON.stringify({ success: false, error: 'Disposition must be emergency or routine.' });
+    }
+    deps.recordDisposition(context.callId, {
+      disposition: args.disposition,
+      chiefComplaint: args.chiefComplaint,
+      redFlag: args.disposition === 'emergency'
+    }).catch((err) => console.error('[db] set_disposition failed:', err.message));
+    return JSON.stringify({ success: true });
+  }
 
   if (toolCall.function.name === 'book_appointment') {
     const smsPhone = normalizePhone(args.smsPhone);
@@ -151,16 +227,22 @@ async function executeTool(toolCall, context, dependencies = { createBooking, se
       return JSON.stringify({ success: false, error: 'Before booking, ask whether the caller wants an SMS. If yes, collect and confirm a mobile number including country code.' });
     }
     try {
-      const booking = await dependencies.createBooking({ name: args.callerName, phone: smsPhone || context.callerPhone });
-      Promise.resolve().then(() => dependencies.sendDoctorNotes({
-        messages: context.messages,
-        bookingStart: booking.start,
-        callerPhone: context.callerPhone
-      })).catch((err) => console.error('[doctor-notes] send failed:', err.message));
+      const booking = await deps.createBooking({ name: args.callerName, phone: smsPhone || context.callerPhone });
+      Promise.resolve()
+        .then(() => deps.getPatientInfo(context.callId))
+        .catch(() => ({}))
+        .then((patient) => deps.sendDoctorNotes({
+          messages: context.messages,
+          bookingStart: booking.start,
+          callerPhone: context.callerPhone,
+          patient
+        }))
+        .catch((err) => console.error('[doctor-notes] send failed:', err.message));
+      deps.recordBooking(context.callId, booking).catch((err) => console.error('[db] recordBooking failed:', err.message));
 
       let sms;
       try {
-        sms = await dependencies.sendBookingConfirmation({ booking, to: smsPhone, consent: args.smsConsent });
+        sms = await deps.sendBookingConfirmation({ booking, to: smsPhone, consent: args.smsConsent });
       } catch {
         sms = { status: 'unknown', reason: 'SMS could not be confirmed.' };
       }
@@ -170,6 +252,7 @@ async function executeTool(toolCall, context, dependencies = { createBooking, se
         appointmentTime: booking.start,
         timeZone: booking.timeZone,
         location: booking.location,
+        doctorName: booking.doctorName,
         sms,
         note: 'Booking confirmed regardless of SMS status. Tell the caller the date/time and time zone. Report the SMS status accurately; do not rebook to retry SMS.'
       });
@@ -185,20 +268,37 @@ async function executeTool(toolCall, context, dependencies = { createBooking, se
 // Resolves a conversation turn to final assistant text, executing any tool
 // calls (currently just book_appointment) along the way. Always non-streaming
 // internally — the caller (our route handler) decides how to relay the result.
-async function resolveCompletion(openaiBody, context) {
+async function resolveCompletion(openaiBody, context, dependencies = {}) {
+  const complete = dependencies.callOpenAI || callOpenAI;
+  const execute = dependencies.executeTool || executeTool;
   let body = openaiBody;
 
   for (let i = 0; i < 3; i++) {
-    const data = await callOpenAI(body);
+    const data = await complete(body);
     const choice = data.choices[0];
 
     if (choice.finish_reason !== 'tool_calls') {
       return { content: choice.message.content, raw: data };
     }
 
+    const calls = choice.message.tool_calls || [];
+    const transfer = calls.find(t => t.function?.name === 'transferCall');
+    const transferOffered = body.tools?.some(t => t.function?.name === 'transferCall');
+    if (transfer && transferOffered && validateTransfer(transfer)) {
+      // Persist any intake tools in a mixed response, but never book while transferring.
+      for (const call of calls) {
+        if (['save_patient_info', 'set_disposition'].includes(call.function?.name)) {
+          await execute(call, context);
+        }
+      }
+      return { content: choice.message.content || null, toolCalls: [transfer] };
+    }
+
     const toolMessages = [];
     for (const toolCall of choice.message.tool_calls) {
-      const result = await executeTool(toolCall, context);
+      const result = LOCAL_TOOL_NAMES.has(toolCall.function?.name)
+        ? await execute(toolCall, context)
+        : JSON.stringify({ success: false, error: 'Transfer unavailable or destination not allowed. Do not claim connection. For a real emergency, tell the caller to dial 911 directly.' });
       toolMessages.push({ role: 'tool', tool_call_id: toolCall.id, content: result });
     }
 
@@ -209,6 +309,27 @@ async function resolveCompletion(openaiBody, context) {
   }
 
   return { content: "I'm having trouble completing that — let's try something else." };
+}
+
+function sendCompletion(res, { content, toolCalls }, model, stream) {
+  const id = `chatcmpl-${Date.now()}`;
+  const finishReason = toolCalls?.length ? 'tool_calls' : 'stop';
+  if (!stream) {
+    return res.json({ id, object: 'chat.completion', created: Math.floor(Date.now() / 1000), model,
+      choices: [{ index: 0, message: { role: 'assistant', content: content ?? null,
+        ...(toolCalls?.length ? { tool_calls: toolCalls } : {}) }, finish_reason: finishReason }] });
+  }
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  const chunk = chatCompletionChunk({ id, model, content: content || '' });
+  chunk.choices[0].delta.role = 'assistant';
+  if (toolCalls?.length) {
+    chunk.choices[0].delta.tool_calls = toolCalls.map((call, index) => ({ ...call, index }));
+  }
+  res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+  res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, finishReason }))}\n\n`);
+  res.end('data: [DONE]\n\n');
 }
 
 app.post('/chat/completions', async (req, res) => {
@@ -225,30 +346,19 @@ app.post('/chat/completions', async (req, res) => {
   // }
 
   const callerPhone = req.body.customer?.number || req.body.call?.customer?.number;
-  const openaiBody = buildOpenAIBody(req.body, [BOOK_APPOINTMENT_TOOL]);
+  const callId = req.body.call?.id;
+  const openaiBody = buildOpenAIBody(req.body, [BOOK_APPOINTMENT_TOOL, SAVE_PATIENT_INFO_TOOL, SET_DISPOSITION_TOOL]);
 
   try {
-    const { content } = await resolveCompletion(openaiBody, { messages, callerPhone });
+    const completion = await resolveCompletion(openaiBody, { messages, callerPhone, callId });
+    const { content } = completion;
 
-    if (stream) {
-      const id = `chatcmpl-${Date.now()}`;
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, content: '' }))}\n\n`);
-      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, content }))}\n\n`);
-      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, finishReason: 'stop' }))}\n\n`);
-      res.write('data: [DONE]\n\n');
-      res.end();
-    } else {
-      res.json({
-        id: `chatcmpl-${Date.now()}`,
-        object: 'chat.completion',
-        created: Math.floor(Date.now() / 1000),
-        model,
-        choices: [{ index: 0, message: { role: 'assistant', content }, finish_reason: 'stop' }]
-      });
+    if (callId) {
+      upsertTranscript(callId, content ? [...messages, { role: 'assistant', content }] : messages, callerPhone)
+        .catch((err) => console.error('[db] upsertTranscript failed:', err.message));
     }
+
+    sendCompletion(res, completion, model, stream);
   } catch (error) {
     console.error('Error resolving completion:', error);
     if (stream) return sendForcedResponseStream(res, model);
@@ -257,8 +367,15 @@ app.post('/chat/completions', async (req, res) => {
 });
 
 app.post('/vapi/webhook', async (req, res) => {
-  console.log('\n📞 VAPI WEBHOOK RECEIVED');
-  console.log(JSON.stringify(req.body, null, 2));
+  const message = req.body.message;
+  const callId = message?.call?.id;
+  if (callId && message?.type === 'end-of-call-report') {
+    try { await recordEndOfCallReport(callId, message); }
+    catch {
+      console.error('[db] end-of-call report could not be saved');
+      return res.status(503).json({ received: false });
+    }
+  }
 
   res.status(200).json({
     received: true
@@ -271,4 +388,4 @@ if (require.main === module) app.listen(PORT, () => {
   console.log(`Triage safety-net server listening on port ${PORT}`);
 });
 
-module.exports = { app, executeTool, buildOpenAIBody };
+module.exports = { app, executeTool, buildOpenAIBody, resolveCompletion, sendCompletion };

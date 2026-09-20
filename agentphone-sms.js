@@ -1,4 +1,5 @@
 const DEFAULT_FROM_NUMBER = '+13142540585';
+const { DOCTOR_NAME, OFFICE_LOCATION } = require('./office-config');
 
 function normalizePhone(value) {
   if (typeof value !== 'string') return null;
@@ -11,12 +12,8 @@ function buildConfirmation(booking) {
   const when = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'full', timeStyle: 'short', timeZone
   }).format(new Date(booking.start));
-  const lines = [`Your appointment is confirmed for ${when} (${timeZone}).`];
-  if (typeof booking.location === 'string' && booking.location.trim()) {
-    lines.push(`Location: ${booking.location.trim()}`);
-  } else {
-    lines.push('Contact the office for location details.');
-  }
+  const lines = [`Your appointment with ${DOCTOR_NAME} is confirmed for ${when} (${timeZone}).`];
+  lines.push(`Location: ${OFFICE_LOCATION}`);
   return lines.join('\n');
 }
 

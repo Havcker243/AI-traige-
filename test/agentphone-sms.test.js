@@ -19,7 +19,9 @@ test('sends appointment details to AgentPhone with normalized recipient and conf
   assert.equal(body.from_number, '+13142540585');
   assert.equal(body.to_number, '+12025550101');
   assert.match(body.body, /10:00 AM.*America\/New_York/);
-  assert.match(body.body, /123 Example Street/);
+  assert.match(body.body, /Location: MIT School of Nursing, Left Wing/);
+  assert.doesNotMatch(body.body, /123 Example Street/);
+  assert.match(body.body, /Doctor Moyo/);
   assert.equal(result.status, 'submitted');
 });
 
@@ -46,7 +48,7 @@ test('reports delivery only on confirmed delivered response and supports a sende
     return { ok: true, json: async () => ({ id: 'msg_test', status: 'delivered' }) };
   } });
   assert.equal(result.status, 'delivered');
-  assert.match(buildConfirmation({ ...booking, location: undefined }), /Contact the office for location details/);
+  assert.match(buildConfirmation({ ...booking, location: undefined }), /MIT School of Nursing, Left Wing/);
 });
 
 function tool(args) {

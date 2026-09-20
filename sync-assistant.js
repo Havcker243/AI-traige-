@@ -6,11 +6,11 @@ async function main() {
   if (!id || !process.env.VAPI_API_KEY || !process.env.SAFETY_NET_URL) {
     throw new Error('Usage: node sync-assistant.js <assistantId>; VAPI_API_KEY and SAFETY_NET_URL must be set.');
   }
-  const { model, firstMessage, voice, transcriber } = buildAssistantPayload();
+  const { model, firstMessage, voice, transcriber, server, serverMessages } = buildAssistantPayload();
   const response = await fetch(`https://api.vapi.ai/assistant/${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${process.env.VAPI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, firstMessage, voice, transcriber }),
+    body: JSON.stringify({ model, firstMessage, voice, transcriber, server, serverMessages }),
     signal: AbortSignal.timeout(15000)
   });
   if (!response.ok) throw new Error(`Assistant update returned HTTP ${response.status}`);

@@ -5,7 +5,7 @@ const DOCTOR_EMAIL = process.env.DOCTOR_EMAIL || 'dolapoadegbesan301@gmail.com';
 
 // Turns the call transcript into a plain-language handoff note for the doctor —
 // not a diagnosis, just what the caller reported and what was decided.
-function buildCaseNotes({ messages, bookingStart, callerPhone }) {
+function buildCaseNotes({ messages, bookingStart, callerPhone, patient = {} }) {
   const transcript = messages
     .filter((m) => m.role === 'user' || m.role === 'assistant')
     .map((m) => `${m.role === 'user' ? 'Caller' : 'Sarah'}: ${m.content}`)
@@ -18,7 +18,11 @@ function buildCaseNotes({ messages, bookingStart, callerPhone }) {
   return `New appointment booked via the AI call line.
 
 Appointment time: ${whenText}
-Caller phone: ${callerPhone || 'Not captured'}
+Patient name: ${patient.name || 'Not captured'}
+Age: ${patient.age || 'Not captured'}
+Sex assigned at birth: ${patient.sex || 'Not captured'}
+Callback phone: ${patient.phone || callerPhone || 'Not captured'}
+Address: ${patient.address || 'Not captured'}
 
 This appointment was booked automatically based on an AI phone interview. Below is the full conversation for context before the visit — please review, this is not a diagnosis.
 
@@ -27,14 +31,14 @@ ${transcript}
 --- End Transcript ---`;
 }
 
-async function sendDoctorNotes({ messages, bookingStart, callerPhone }) {
+async function sendDoctorNotes({ messages, bookingStart, callerPhone, patient }) {
   const key = process.env.AGENTMAIL_API_KEY;
   if (!key) throw new Error('Missing AGENTMAIL_API_KEY');
 
   const body = {
     to: DOCTOR_EMAIL,
     subject: `New appointment booked — ${callerPhone || 'unknown caller'}`,
-    text: buildCaseNotes({ messages, bookingStart, callerPhone })
+    text: buildCaseNotes({ messages, bookingStart, callerPhone, patient })
   };
 
   const res = await fetch(`https://api.agentmail.to/inboxes/${AGENTMAIL_INBOX}/messages/send`, {

@@ -31,7 +31,9 @@ async function main() {
         return { number: n.number, assistantId: n.assistantId, name: a?.name,
           proxyMatches: a?.model?.url === process.env.SAFETY_NET_URL,
           promptMatches: a?.model?.messages?.find(m => m.role === 'system')?.content === SYSTEM_PROMPT,
-          voice: a?.voice, provider: a?.model?.provider };
+          voice: a?.voice, provider: a?.model?.provider,
+          transfer: a?.model?.tools?.filter(t => t.type === 'transferCall').map(t => t.destinations?.map(d => ({ number: d.number, mode: d.transferPlan?.mode }))),
+          webhook: a?.server?.url, serverMessages: a?.serverMessages };
       });
     }),
     check('cal-availability', async () => ({ earliestSlot: await getEarliestSlot() })),

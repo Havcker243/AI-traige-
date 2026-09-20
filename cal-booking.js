@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { DOCTOR_NAME, OFFICE_LOCATION } = require('./office-config');
 
 const CAL_API_BASE = 'https://api.cal.com/v2';
 const EVENT_TYPE_ID = 4242047; // "30 Min Meeting" — the default event type on the account
@@ -12,20 +13,28 @@ function calHeaders(version) {
   };
 }
 
+function selectRoutineSlot(days, now = new Date()) {
+  const dayFormatter = new Intl.DateTimeFormat('en-CA', { timeZone: DEFAULT_TIMEZONE });
+  const today = dayFormatter.format(now);
+  const eligible = Object.values(days || {}).flat()
+    .filter(slot => slot && Number.isFinite(Date.parse(slot.start)))
+    .filter(slot => new Date(slot.start) > now && dayFormatter.format(new Date(slot.start)) > today)
+    .sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+  if (!eligible.length) throw new Error('No available routine slots after today in the next week');
+  return eligible[0].start;
+}
+
 async function getEarliestSlot() {
   const start = new Date();
-  const end = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const end = new Date(start.getTime() + 8 * 24 * 60 * 60 * 1000);
   const url = `${CAL_API_BASE}/slots?eventTypeId=${EVENT_TYPE_ID}&start=${start.toISOString().slice(0, 10)}&end=${end.toISOString().slice(0, 10)}`;
 
   const res = await fetch(url, { headers: calHeaders('2024-09-04') });
   if (!res.ok) throw new Error(`Failed to fetch slots: ${res.status} ${await res.text()}`);
 
   const data = await res.json();
-  for (const day of Object.keys(data.data).sort()) {
-    const slots = data.data[day];
-    if (slots.length > 0) return slots[0].start;
-  }
-  throw new Error('No available slots in the next 7 days');
+  // Compare each actual start in the clinic's time zone, not the API's date buckets.
+  return selectRoutineSlot(data.data, start);
 }
 
 // Cal.com requires an attendee email even when we only have a phone number, and
@@ -67,9 +76,10 @@ async function createBooking({ name, phone }) {
     bookingUid: data.data?.uid,
     start,
     timeZone: DEFAULT_TIMEZONE,
-    location: typeof data.data?.location === 'string' ? data.data.location : undefined,
+    location: OFFICE_LOCATION,
+    doctorName: DOCTOR_NAME,
     eventTypeId: EVENT_TYPE_ID
   };
 }
 
-module.exports = { createBooking, getEarliestSlot };
+module.exports = { createBooking, getEarliestSlot, selectRoutineSlot };
