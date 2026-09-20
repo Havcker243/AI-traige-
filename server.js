@@ -256,6 +256,15 @@ app.post('/chat/completions', async (req, res) => {
   }
 });
 
+app.post('/vapi/webhook', async (req, res) => {
+  console.log('\n📞 VAPI WEBHOOK RECEIVED');
+  console.log(JSON.stringify(req.body, null, 2));
+
+  res.status(200).json({
+    received: true
+  });
+});
+
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
 if (require.main === module) app.listen(PORT, () => {

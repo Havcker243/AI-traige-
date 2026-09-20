@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "dotenv": "^18.0.1",
+    "express": "^5.2.1",
     "mongodb": "^7.6.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
