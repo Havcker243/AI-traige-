@@ -158,6 +158,15 @@ async function getCall(callId) {
   return calls.findOne({ callId });
 }
 
+async function listCalls(limit = 50) {
+  const calls = await getCalls();
+  if (!calls) return [];
+  return calls.find({}, { projection: { vapiReport: 0 } })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .toArray();
+}
+
 async function getPatientInfo(callId) {
   const call = await getCall(callId);
   return call?.patient || {};
@@ -165,5 +174,5 @@ async function getPatientInfo(callId) {
 
 module.exports = {
   upsertTranscript, savePatientInfo, recordBooking, recordDisposition, endCall,
-  recordEndOfCallReport, getCall, getPatientInfo
+  recordEndOfCallReport, getCall, listCalls, getPatientInfo
 };
