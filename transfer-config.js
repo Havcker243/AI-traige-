@@ -1,5 +1,5 @@
 // Demo operator supplied for testing. This is not a public emergency number.
-const TEST_TRANSFER_NUMBER = '+17744860742';
+const TEST_TRANSFER_NUMBER = '+16572667556';
 
 function buildTransferTool() {
   return {

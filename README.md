@@ -87,50 +87,22 @@ No quotes are needed around the values.
 forwarding to port 3000, not localhost. The proxy serves `/chat/completions` and
 `/vapi/webhook` on that domain.
 
-## Appointment confirmation texts (Twilio)
+## Appointment confirmation email
 
-The existing Cal.com booking tool now sends an appointment confirmation through
-[Twilio's Messages API](https://www.twilio.com/docs/sms/send-messages) when the
-caller agrees to a text and confirms their mobile number with country code.
-The message contains Doctor Moyo, the booked date/time/time zone, and the fixed
-office address `MIT School of Nursing, Left Wing`. It does not include the symptom
-interview or medical notes. (`agentphone-sms.js` is retained for reference/rollback
-but is no longer wired into `server.js`.)
-
-Add these settings to your local `.env` (never commit API keys):
-
-```env
-TWILIO_ACCOUNT_SID=your_account_sid
-TWILIO_AUTH_TOKEN=your_auth_token
-TWILIO_FROM_NUMBER=+17372583742
-```
-
-Account SID and Auth Token come from the Twilio Console dashboard. The sender
-must be an SMS-capable Twilio number on that account. On a **trial** account,
-Twilio can only text numbers verified under Phone Numbers → Verified Caller IDs,
-and every message gets `Sent from your Twilio trial account - ` prepended
-automatically — that goes away once the account is upgraded to paid. Twilio's
-initial API response only ever confirms the message was *accepted*, never
-delivery, so `sms.status` will be `submitted`, not `delivered`, in normal use.
-
-Restart the proxy with `npm start` after configuration or code changes. The proxy
-injects the updated booking instructions on every request, including for existing
-Vapi assistants; there is no need to create another assistant for this change.
-
-Texting failure does not undo an appointment. David receives the SMS outcome and
-must distinguish submission from confirmed delivery. Sends are not automatically
-retried after timeouts because the provider may already have accepted the text.
-This integration sends a confirmation for an appointment already booked; it does
-not implement inbound text replies or booking through SMS.
-
-Run `npm test` for mocked tests; these do not create appointments, send emails,
-or send real messages. Live SMS delivery still needs a real-device test.
+SMS is disabled in the active booking flow. David does not request texting
+permission or a number for texts. Booking confirmation emails still go to the
+hardcoded recipient in patient-notification.js, nguyenthy1325@gmail.com.
+Doctor notes keep their existing recipient. The confirmation includes Doctor
+Moyo, appointment date/time/time zone, and MIT School of Nursing, Left Wing.
+Email failure does not undo a booking; David reads the details aloud.
+The old SMS modules remain for reference but are not imported by the active server
+or email formatter. Credentials in .env were left untouched.
 
 ## Demo transfer and current handoff
 
 
 The assistant now has Vapi's native `transferCall` tool configured for a warm
-transfer to **+1 (774) 486-0742**, the supplied test operator number. The destination
+transfer to **+1 (657) 266-7556**, the supplied test operator number. The destination
 is intended to hear a generated introduction and short caller summary, then
 accept the call before connection, using `warm-transfer-experimental`.
 This is a simulated emergency handoff, not real 911 or ambulance dispatch.
@@ -179,7 +151,7 @@ may accept or decline an offered routine visit.
 
 Confirmation texts and returned booking details use the fixed office location
 `MIT School of Nursing, Left Wing` and Doctor Moyo from `office-config.js`.
-The SMS never substitutes Cal.com's location. These are user-supplied prototype
+The confirmation email never substitutes Cal.com's location. These are user-supplied prototype
 details, not an independently verified facility address.
 
 If the local DNS resolver refuses Atlas SRV queries (`querySrv ECONNREFUSED`),
@@ -187,7 +159,7 @@ set `MONGODB_DNS_SERVERS=1.1.1.1` in `.env`. This overrides the Node process's
 DNS resolver used for SRV lookups; it does not change Windows DNS settings.
 Remove the setting to use system defaults. `node check-db.js` verifies connectivity.
 
-Next: live two-phone transfer testing, SMS sender activation, dashboard/API for
+Next: live two-phone transfer testing, dashboard/API for
 reviewing stored calls, written self-care summaries, and clinical scenario review.
 
 Verification completed: 17 mocked tests pass. The public proxy produced a valid
@@ -196,7 +168,7 @@ synthetic end-of-call report was saved through the public webhook to MongoDB.
 The synthetic record was then removed. Run `node smoke-live.js` to repeat those
 checks (uses OpenAI and briefly creates/deletes its own uniquely named test record).
 
-For the remaining telephone test, have someone ready at +1 (774) 486-0742, then
+For the remaining telephone test, have someone ready at +1 (657) 266-7556, then
 call +1 (943) 222-9510 from a different phone. Explicitly describe the scenario as
 a simulation and agree to a test handoff. Verify the destination rings, hears the
 summary, accepts by saying "Yes, I can take the caller," and can speak with the caller.
