@@ -8,7 +8,7 @@ import { Transcript, CaseSummary } from './components/Panels.jsx';
 
 const FALLBACK_CONFIG = { voice: { provider: 'vapi', voiceId: 'Elliot' }, transcriber: { provider: 'deepgram', model: 'nova-2-general' }, model: { provider: 'custom-llm', model: 'gpt-4o-mini' }, transferNumber: '' };
 
-export default function App({ onSwitch }) {
+export default function App() {
   const { calls, feed, connected } = useEventStream();
   const [rawConfig, setRawConfig] = useState(FALLBACK_CONFIG);
   const [history, setHistory] = useState([]);
@@ -68,7 +68,6 @@ export default function App({ onSwitch }) {
           <span className="chip">Transfer: <span className="mono">{config.transferNumber}</span></span>
         </div>
         <div className="actions">
-          <button className="ghost" onClick={onSwitch}>Switch to light design</button>
           <label className="follow"><input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} /> Follow live call</label>
           <button disabled={simulating} onClick={() => simulate('routine')}>Simulate routine call</button>
           <button disabled={simulating} className="danger" onClick={() => simulate('emergency')}>Simulate emergency</button>
