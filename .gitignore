@@ -3,3 +3,4 @@ node_modules/
 backend/.env
 backend/node_modules/
 backend/dist/
+.venv
