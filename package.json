@@ -5,6 +5,8 @@
   "description": "Minimal Vapi voice assistant starter for a phone-based hello-world triage loop.",
   "type": "commonjs",
   "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
     "create-assistant": "node create-assistant.js",
     "attach-number": "node attach-number.js"
   },

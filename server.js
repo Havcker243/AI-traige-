@@ -3,6 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
+const { createBooking } = require('./cal-booking');
+const { sendDoctorNotes } = require('./doctor-notes');
+const { sendBookingConfirmation, normalizePhone } = require('./agentphone-sms');
+
+const BOOKING_INSTRUCTIONS = {
+  role: 'system',
+  content: 'Booking update: appointment confirmation texts are now supported via book_appointment. This replaces earlier statements that texting is unavailable. Before booking, ask whether the caller wants a confirmation text. If yes, collect and read back their mobile number including country code, and obtain confirmation before passing it as smsPhone with smsConsent=true. If they decline, book with smsConsent=false. Never assume caller ID is permission or a confirmed SMS number. Do not delay emergency assistance for booking or texting. After the tool returns, report the actual appointment time and time zone. Only say the text was submitted if sms.status is submitted; this does not confirm delivery. Only say delivered when sms.status is delivered. Otherwise explain the booking is confirmed but the text could not be confirmed/sent, and read the appointment details aloud. Never book again to retry a text. Do not promise an office callback unless it has actually been arranged.'
+};
 
 const app = express();
 app.use(express.json());
@@ -68,11 +76,31 @@ function sendForcedResponseJson(res, model) {
 // also carries call/customer/assistant/metadata/timestamp context, which
 // OpenAI rejects outright with a 400 if passed through.
 const OPENAI_ALLOWED_FIELDS = [
-  'model', 'messages', 'stream', 'temperature', 'max_tokens', 'top_p',
-  'frequency_penalty', 'presence_penalty', 'stop', 'n', 'tools', 'tool_choice'
+  'model', 'messages', 'temperature', 'max_tokens', 'top_p',
+  'frequency_penalty', 'presence_penalty', 'stop', 'n'
 ];
 
-function buildOpenAIBody(reqBody) {
+const BOOK_APPOINTMENT_TOOL = {
+  type: 'function',
+  function: {
+    name: 'book_appointment',
+    description: "Books a real same-day/routine appointment for the caller on the practice's calendar. Only call this after the caller has explicitly agreed to book, and you have their name.",
+    parameters: {
+      type: 'object',
+      properties: {
+        callerName: { type: 'string', description: "The caller's name, as given during the call." },
+        smsConsent: { type: 'boolean', description: 'True only after explicit permission to send the appointment confirmation and confirmation of smsPhone.' },
+        smsPhone: { type: 'string', description: 'Mobile number read back and confirmed by the caller, including + and country code. Omit if they decline SMS.' }
+      },
+      required: ['callerName', 'smsConsent']
+    }
+  }
+};
+
+// We always resolve tool calls ourselves (never forward `tools`/`stream` to
+// OpenAI directly) so we can execute book_appointment and feed the result
+// back in, regardless of what Vapi's own request shape asks for.
+function buildOpenAIBody(reqBody, extraTools) {
   const body = {};
   for (const key of OPENAI_ALLOWED_FIELDS) {
     if (reqBody[key] !== undefined) body[key] = reqBody[key];
@@ -84,11 +112,103 @@ function buildOpenAIBody(reqBody) {
     body.messages = [
       ...body.messages.slice(0, insertAt),
       QUESTION_LIBRARY_MESSAGE,
+      BOOKING_INSTRUCTIONS,
       ...body.messages.slice(insertAt)
     ];
   }
 
+  if (extraTools && extraTools.length) {
+    body.tools = extraTools;
+  }
+
   return body;
+}
+
+async function callOpenAI(body) {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`OpenAI error ${res.status}: ${errText.slice(0, 500)}`);
+  }
+
+  return res.json();
+}
+
+async function executeTool(toolCall, context, dependencies = { createBooking, sendDoctorNotes, sendBookingConfirmation }) {
+  const args = JSON.parse(toolCall.function.arguments || '{}');
+
+  if (toolCall.function.name === 'book_appointment') {
+    const smsPhone = normalizePhone(args.smsPhone);
+    if (typeof args.smsConsent !== 'boolean' || (args.smsConsent && !smsPhone)) {
+      return JSON.stringify({ success: false, error: 'Before booking, ask whether the caller wants an SMS. If yes, collect and confirm a mobile number including country code.' });
+    }
+    try {
+      const booking = await dependencies.createBooking({ name: args.callerName, phone: smsPhone || context.callerPhone });
+      Promise.resolve().then(() => dependencies.sendDoctorNotes({
+        messages: context.messages,
+        bookingStart: booking.start,
+        callerPhone: context.callerPhone
+      })).catch((err) => console.error('[doctor-notes] send failed:', err.message));
+
+      let sms;
+      try {
+        sms = await dependencies.sendBookingConfirmation({ booking, to: smsPhone, consent: args.smsConsent });
+      } catch {
+        sms = { status: 'unknown', reason: 'SMS could not be confirmed.' };
+      }
+
+      return JSON.stringify({
+        success: true,
+        appointmentTime: booking.start,
+        timeZone: booking.timeZone,
+        location: booking.location,
+        sms,
+        note: 'Booking confirmed regardless of SMS status. Tell the caller the date/time and time zone. Report the SMS status accurately; do not rebook to retry SMS.'
+      });
+    } catch (err) {
+      console.error('[book_appointment] failed:', err.message);
+      return JSON.stringify({ success: false, error: 'Booking could not be confirmed. No SMS sent. Ask the caller to contact the office; do not promise an automatic callback.' });
+    }
+  }
+
+  return JSON.stringify({ success: false, error: 'Unknown tool' });
+}
+
+// Resolves a conversation turn to final assistant text, executing any tool
+// calls (currently just book_appointment) along the way. Always non-streaming
+// internally — the caller (our route handler) decides how to relay the result.
+async function resolveCompletion(openaiBody, context) {
+  let body = openaiBody;
+
+  for (let i = 0; i < 3; i++) {
+    const data = await callOpenAI(body);
+    const choice = data.choices[0];
+
+    if (choice.finish_reason !== 'tool_calls') {
+      return { content: choice.message.content, raw: data };
+    }
+
+    const toolMessages = [];
+    for (const toolCall of choice.message.tool_calls) {
+      const result = await executeTool(toolCall, context);
+      toolMessages.push({ role: 'tool', tool_call_id: toolCall.id, content: result });
+    }
+
+    body = {
+      ...body,
+      messages: [...body.messages, choice.message, ...toolMessages]
+    };
+  }
+
+  return { content: "I'm having trouble completing that — let's try something else." };
 }
 
 app.post('/chat/completions', async (req, res) => {
@@ -104,37 +224,33 @@ app.post('/chat/completions', async (req, res) => {
   //   return sendForcedResponseJson(res, model);
   // }
 
-  try {
-    const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(buildOpenAIBody(req.body))
-    });
+  const callerPhone = req.body.customer?.number || req.body.call?.customer?.number;
+  const openaiBody = buildOpenAIBody(req.body, [BOOK_APPOINTMENT_TOOL]);
 
-    if (!upstream.ok) {
-      const errText = await upstream.text();
-      console.error(`[openai error] status ${upstream.status}:`, errText.slice(0, 500));
-      if (stream) return sendForcedResponseStream(res, model);
-      return res.status(upstream.status).send(errText);
-    }
+  try {
+    const { content } = await resolveCompletion(openaiBody, { messages, callerPhone });
 
     if (stream) {
+      const id = `chatcmpl-${Date.now()}`;
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
-      for await (const chunk of upstream.body) {
-        res.write(chunk);
-      }
+      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, content: '' }))}\n\n`);
+      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, content }))}\n\n`);
+      res.write(`data: ${JSON.stringify(chatCompletionChunk({ id, model, finishReason: 'stop' }))}\n\n`);
+      res.write('data: [DONE]\n\n');
       res.end();
     } else {
-      const data = await upstream.json();
-      res.status(upstream.status).json(data);
+      res.json({
+        id: `chatcmpl-${Date.now()}`,
+        object: 'chat.completion',
+        created: Math.floor(Date.now() / 1000),
+        model,
+        choices: [{ index: 0, message: { role: 'assistant', content }, finish_reason: 'stop' }]
+      });
     }
   } catch (error) {
-    console.error('Error proxying to OpenAI:', error);
+    console.error('Error resolving completion:', error);
     if (stream) return sendForcedResponseStream(res, model);
     res.status(500).json({ error: 'Upstream request failed' });
   }
@@ -142,6 +258,8 @@ app.post('/chat/completions', async (req, res) => {
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.listen(PORT, () => {
+if (require.main === module) app.listen(PORT, () => {
   console.log(`Triage safety-net server listening on port ${PORT}`);
 });
+
+module.exports = { app, executeTool, buildOpenAIBody };

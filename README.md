@@ -67,3 +67,35 @@ OPENAI_API_KEY=
 ```
 
 No quotes are needed around the values.
+
+## Appointment confirmation texts (AgentPhone)
+
+The existing Cal.com booking tool now sends an appointment confirmation through
+[AgentPhone's messaging API](https://docs.agentphone.ai/documentation/guides/messages)
+when the caller agrees to a text and confirms their mobile number with country code.
+The message contains the booked date, time, time zone, and location when Cal.com
+returns one. It does not include the symptom interview or medical notes.
+
+Add these settings to your local `.env` (never commit API keys):
+
+```env
+AGENTPHONE_API_KEY=your_agentphone_key
+AGENTPHONE_FROM_NUMBER=+13142540585
+```
+
+The sender must belong to the AgentPhone account and be enabled for outbound
+messaging. US outbound SMS requires the registration described in AgentPhone's
+documentation. `AGENTCALL_API_KEY` is not used: AgentCall is a different provider.
+
+Restart the proxy with `npm start` after configuration or code changes. The proxy
+injects the updated booking instructions on every request, including for existing
+Vapi assistants; there is no need to create another assistant for this change.
+
+Texting failure does not undo an appointment. Sarah receives the SMS outcome and
+must distinguish submission from confirmed delivery. Sends are not automatically
+retried after timeouts because the provider may already have accepted the text.
+This integration sends a confirmation for an appointment already booked; it does
+not implement inbound text replies or booking through SMS.
+
+Run `npm test` for mocked tests; these do not create appointments, send emails,
+or send real messages. Live SMS delivery still needs a real-device test.

@@ -748,3 +748,25 @@ Other Symptoms: "Do you have any other symptoms?" (e.g., blood in the urine, fla
 Diagnosis: "When was the UTI diagnosed?" "By whom?" "Was it a kidney infection, bladder infection or both?"
 Antibiotic: "What antibiotic(s) are you taking?" "How many times per day?"
 Antibiotic - Start Date: "When did you start taking the antibiotic?"
+
+Emergency First Aid
+Immediate Actions While Waiting for Emergency Services
+Source note: this section gives short, one-step-at-a-time actions to talk a caller through during a life-threatening emergency, while 911 is being called or is en route. Always tell the caller to call (or have someone call) 911 first. These are general, widely-taught basic first aid steps, not a substitute for EMS or a doctor. Never recommend a specific medication or dose unless the caller already has their own prescribed device (e.g. their own EpiPen, their own nitroglycerin, their own inhaler) for that use.
+
+Severe Bleeding: "Press down firmly on the wound with a clean cloth, towel, or your hand." "Keep steady, firm pressure — don't lift it to check." If on a limb and bleeding doesn't stop: "If you can, raise the injured area above the level of the heart while keeping pressure on it." "Do not remove any object that's stuck in the wound — hold it in place and apply pressure around it instead." "Keep them still, lying down if possible, and keep them warm."
+
+Choking: "Is the person able to cough, speak, or breathe at all?" If they can cough or speak, encourage them to keep coughing. If they cannot breathe, cough, or make sound: "Call 911 immediately if not already on the line." Talk the caller through back blows and abdominal thrusts (Heimlich maneuver) only if they indicate they know how or are willing to be walked through it, one step at a time; otherwise keep them on the line with 911 guidance.
+
+Severe Allergic Reaction / Anaphylaxis: "Do they have their own epinephrine auto-injector (EpiPen) or epinephrine nasal spray (Neffy) with them?" If yes: "Use it now, exactly as prescribed." "Have them lie flat and raise their legs, unless they're having trouble breathing — in that case, let them sit up in whatever position is most comfortable for breathing." "If symptoms don't improve or they have another auto-injector, a second dose can be given after about 5-15 minutes if instructed by EMS."
+
+Chest Pain (possible heart attack): "Have them sit or lie down in a comfortable position and stay as still and calm as possible." "If they have their own prescribed nitroglycerin, they can take it as prescribed." "If they are not allergic to aspirin and are able to safely chew and swallow, chewing one adult aspirin (325 mg) can be helpful — but do not give aspirin if there's any known allergy, bleeding disorder, or if EMS advises against it." "Loosen any tight clothing." "Keep them talking to you and stay on the line."
+
+Stroke Symptoms: "Note the time symptoms started if you can — this matters a lot for treatment." "Keep them safe and comfortable, lying down with their head slightly elevated if possible." "Do not give them anything to eat or drink — swallowing may be affected." "Stay with them and keep talking to them, and keep them calm."
+
+Seizure: "Do not hold them down or restrain their movements." "Clear the area around them of anything hard or sharp they could hit." "Do not put anything in their mouth." "If possible, gently turn them onto their side once the shaking stops or slows, to help keep their airway clear." "Time how long the seizure lasts if you can." "Stay with them until they're fully alert or help arrives."
+
+Not Breathing / No Pulse: "Is the person breathing normally?" If not breathing normally or unresponsive: "If you know CPR, start chest compressions now — push hard and fast in the center of the chest." "If you don't know CPR, 911 dispatch can talk you through hands-only CPR — stay on that line." "If an AED (defibrillator) is nearby, have someone bring it."
+
+Severe Burn: "Cool the burn with cool (not ice-cold) running water for several minutes." "Do not apply ice, butter, or ointments." "Do not break any blisters." "Remove any tight clothing or jewelry near the burn before it swells, if it can be done without hurting them further." "Cover loosely with a clean, dry cloth."
+
+Suspected Overdose / Poisoning: "Do you know what was taken and roughly how much?" "Keep them awake and sitting up if possible, unless they're vomiting — then turn them on their side." "Do not try to make them vomit unless specifically told to by 911 or poison control." "If available, note the substance/container for when EMS arrives."
