@@ -88,14 +88,14 @@ async function simulateCall({ scenario, delayMs = 900, emit = emitEvent, callId:
     await speech('user', 'stopped');
     await step('turn.received', {
       messageCount: 9,
-      lastUserMessage: 'Yes please, and text me at +1 555 010 0200',
+      lastUserMessage: 'Yes please, book me in',
       stream: false
     });
     await llmRequest(['transferCall', 'book_appointment', 'save_patient_info', 'set_disposition']);
     await llmResponse('tool_calls', ['book_appointment'], null);
     await step('tool.started', {
       name: 'book_appointment',
-      args: { callerName: 'Jamie Lee', smsConsent: true, smsPhone: '+1 555 010 0200' }
+      args: { callerName: 'Jamie Lee' }
     });
     const appointmentTime = clinicLocalTomorrowAt(10);
     await step('tool.finished', {
@@ -105,8 +105,7 @@ async function simulateCall({ scenario, delayMs = 900, emit = emitEvent, callId:
         appointmentTime: appointmentTime.toISOString(),
         timeZone: 'America/New_York',
         location: 'MIT School of Nursing, Left Wing',
-        doctorName: 'Doctor Moyo',
-        sms: { status: 'submitted' }
+        doctorName: 'Doctor Moyo'
       },
       latencyMs: 240
     });

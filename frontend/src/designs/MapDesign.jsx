@@ -30,7 +30,7 @@ const NODES = {
   knowledge: { x: col(3), y: ROW[1], title: 'Triage protocol', sub: 'Question library' },
   mongo: { x: col(4), y: ROW[1], title: 'Call records', sub: 'MongoDB Atlas' },
   cal: { x: col(5), y: ROW[1], title: 'Appointments', sub: 'Cal.com' },
-  sms: { x: col(6), y: ROW[1], title: 'Text message', sub: 'Twilio' },
+  sms: { x: col(6), y: ROW[1], title: 'Patient email', sub: 'AgentMail' },
   mail: { x: col(5), y: ROW[2], title: 'Doctor email', sub: 'AgentMail' }
 };
 const WIRES = [
@@ -117,8 +117,7 @@ function visited(call) {
     if (e.type === 'tool.finished' && e.data?.name === 'book_appointment' && e.data?.success) s.add('cal');
     if (e.type === 'transfer.returned') s.add('transfer');
   }
-  if (call.sms) s.add('sms');
-  if (call.booking && !call.booking.failed) s.add('mail');
+  if (call.booking && !call.booking.failed) { s.add('sms'); s.add('mail'); }
   return s;
 }
 
@@ -254,7 +253,7 @@ export default function MapDesign({ onSwitch }) {
             <dt>Callback</dt><dd>{p.phone || call?.callerPhone || '—'}</dd>
             <dt>Address</dt><dd>{p.address || '—'}</dd>
             <dt>Appointment</dt><dd>{call?.booking && !call.booking.failed ? new Date(call.booking.appointmentTime).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZone: call.booking.timeZone }) : '—'}</dd>
-            <dt>SMS</dt><dd>{call?.sms?.status || '—'}</dd>
+            <dt>Confirmation</dt><dd>{call?.booking && !call.booking.failed ? 'email queued' : '—'}</dd>
             <dt>Saved</dt><dd>{call?.db?.filter((d) => d.ok).map((d) => d.op).join(', ') || '—'}</dd>
           </dl>
         </div>

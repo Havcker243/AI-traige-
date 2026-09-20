@@ -11,7 +11,7 @@ export const STAGES = [
 export const TOOL_STAGES = [
   { id: 'save_patient_info', label: 'save_patient_info', sub: 'MongoDB' },
   { id: 'set_disposition', label: 'set_disposition', sub: 'MongoDB' },
-  { id: 'book_appointment', label: 'book_appointment', sub: 'Cal.com · Twilio SMS · AgentMail' },
+  { id: 'book_appointment', label: 'book_appointment', sub: 'Cal.com · AgentMail' },
   { id: 'transferCall', label: 'transferCall', sub: 'Vapi warm transfer' }
 ];
 

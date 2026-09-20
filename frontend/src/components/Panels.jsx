@@ -42,7 +42,6 @@ function Row({ label, value, mono }) {
 
 export function CaseSummary({ call, config }) {
   const p = call?.patient || {};
-  const smsStatus = call?.sms?.status;
   return (
     <section className="card case">
       <header className="card-head"><h2>Case record</h2>{call?.callId && <span className="muted mono small">{call.callId}</span>}</header>
@@ -75,7 +74,7 @@ export function CaseSummary({ call, config }) {
           <Row label="When" value={fmtDate(call.booking.appointmentTime, call.booking.timeZone)} />
           <Row label="With" value={call.booking.doctorName} />
           <Row label="Where" value={call.booking.location} />
-          <Row label="SMS" value={smsStatus ? `${smsStatus}${call.sms.reason ? ` — ${call.sms.reason}` : ''}` : 'not requested'} />
+          <Row label="Patient email" value="queued via AgentMail" />
           <Row label="Doctor email" value="queued via AgentMail" />
         </>
       ) : !call?.booking && <div className="muted small">No booking yet.</div>}
