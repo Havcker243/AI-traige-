@@ -33,7 +33,7 @@ async function getCalls() {
 async function upsertTranscript(callId, messages, callerPhone) {
   if (!callId) return;
   const calls = await getCalls();
-  if (!calls || !callId) return;
+  if (!calls) return;
   const transcript = messages
     .filter((m) => m.role === 'user' || m.role === 'assistant')
     .map((m) => ({ role: m.role, content: m.content }));
@@ -56,28 +56,29 @@ async function upsertTranscript(callId, messages, callerPhone) {
 }
 
 async function savePatientInfo(callId, info) {
-  if (!callId) return;
+  if (!callId) return false;
   const calls = await getCalls();
-  if (!calls || !callId) return;
+  if (!calls) return false;
   const updates = { updatedAt: new Date() };
   for (const [key, value] of Object.entries(info)) {
     if (value !== undefined && value !== null && value !== '') {
       updates[`patient.${key}`] = value;
     }
   }
-  if (Object.keys(updates).length === 1) return; // nothing but updatedAt
+  if (Object.keys(updates).length === 1) return false; // nothing but updatedAt
 
   await calls.updateOne(
     { callId },
     { $set: updates, $setOnInsert: { callId, status: 'active', transcript: [], createdAt: new Date() } },
     { upsert: true }
   );
+  return true;
 }
 
 async function recordBooking(callId, booking) {
   if (!callId) return;
   const calls = await getCalls();
-  if (!calls || !callId) return;
+  if (!calls) return;
   await calls.updateOne(
     { callId },
     {
@@ -97,7 +98,7 @@ async function recordBooking(callId, booking) {
 async function recordDisposition(callId, { disposition, chiefComplaint, redFlag }) {
   if (!callId) return;
   const calls = await getCalls();
-  if (!calls || !callId) return;
+  if (!calls) return;
   const updates = { updatedAt: new Date() };
   if (disposition) updates.disposition = disposition;
   if (chiefComplaint) updates.chiefComplaint = chiefComplaint;
@@ -110,15 +111,6 @@ async function recordDisposition(callId, { disposition, chiefComplaint, redFlag 
   );
 }
 
-async function endCall(callId) {
-  if (!callId) return;
-  const calls = await getCalls();
-  if (!calls || !callId) return;
-  await calls.updateOne(
-    { callId },
-    { $set: { status: 'completed', endedAt: new Date(), updatedAt: new Date() } }
-  );
-}
 
 // Stores Vapi's own end-of-call-report verbatim (under vapiReport) so nothing it
 // sends — recording URL, cost, analysis, exact duration, etc. — is ever lost to a
@@ -127,7 +119,7 @@ async function endCall(callId) {
 async function recordEndOfCallReport(callId, message) {
   if (!callId) return;
   const calls = await getCalls();
-  if (!calls || !callId) return;
+  if (!calls) return;
 
   const updates = {
     status: 'completed',
@@ -154,7 +146,7 @@ async function recordEndOfCallReport(callId, message) {
 async function getCall(callId) {
   if (!callId) return null;
   const calls = await getCalls();
-  if (!calls || !callId) return null;
+  if (!calls) return null;
   return calls.findOne({ callId });
 }
 
@@ -164,6 +156,6 @@ async function getPatientInfo(callId) {
 }
 
 module.exports = {
-  upsertTranscript, savePatientInfo, recordBooking, recordDisposition, endCall,
+  upsertTranscript, savePatientInfo, recordBooking, recordDisposition,
   recordEndOfCallReport, getCall, getPatientInfo
 };

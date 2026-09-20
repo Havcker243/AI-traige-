@@ -87,31 +87,37 @@ No quotes are needed around the values.
 forwarding to port 3000, not localhost. The proxy serves `/chat/completions` and
 `/vapi/webhook` on that domain.
 
-## Appointment confirmation texts (AgentPhone)
+## Appointment confirmation texts (Twilio)
 
 The existing Cal.com booking tool now sends an appointment confirmation through
-[AgentPhone's messaging API](https://docs.agentphone.ai/documentation/guides/messages)
-when the caller agrees to a text and confirms their mobile number with country code.
+[Twilio's Messages API](https://www.twilio.com/docs/sms/send-messages) when the
+caller agrees to a text and confirms their mobile number with country code.
 The message contains Doctor Moyo, the booked date/time/time zone, and the fixed
 office address `MIT School of Nursing, Left Wing`. It does not include the symptom
-interview or medical notes.
+interview or medical notes. (`agentphone-sms.js` is retained for reference/rollback
+but is no longer wired into `server.js`.)
 
 Add these settings to your local `.env` (never commit API keys):
 
 ```env
-AGENTPHONE_API_KEY=your_agentphone_key
-AGENTPHONE_FROM_NUMBER=+13142540585
+TWILIO_ACCOUNT_SID=your_account_sid
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_FROM_NUMBER=+17372583742
 ```
 
-The sender must belong to the AgentPhone account and be enabled for outbound
-messaging. US outbound SMS requires the registration described in AgentPhone's
-documentation. `AGENTCALL_API_KEY` is not used: AgentCall is a different provider.
+Account SID and Auth Token come from the Twilio Console dashboard. The sender
+must be an SMS-capable Twilio number on that account. On a **trial** account,
+Twilio can only text numbers verified under Phone Numbers → Verified Caller IDs,
+and every message gets `Sent from your Twilio trial account - ` prepended
+automatically — that goes away once the account is upgraded to paid. Twilio's
+initial API response only ever confirms the message was *accepted*, never
+delivery, so `sms.status` will be `submitted`, not `delivered`, in normal use.
 
 Restart the proxy with `npm start` after configuration or code changes. The proxy
 injects the updated booking instructions on every request, including for existing
 Vapi assistants; there is no need to create another assistant for this change.
 
-Texting failure does not undo an appointment. Sarah receives the SMS outcome and
+Texting failure does not undo an appointment. David receives the SMS outcome and
 must distinguish submission from confirmed delivery. Sends are not automatically
 retried after timeouts because the provider may already have accepted the text.
 This integration sends a confirmation for an appointment already booked; it does
@@ -122,12 +128,13 @@ or send real messages. Live SMS delivery still needs a real-device test.
 
 ## Demo transfer and current handoff
 
+
 The assistant now has Vapi's native `transferCall` tool configured for a warm
 transfer to **+1 (774) 486-0742**, the supplied test operator number. The destination
 is intended to hear a generated introduction and short caller summary, then
 accept the call before connection, using `warm-transfer-experimental`.
 This is a simulated emergency handoff, not real 911 or ambulance dispatch.
-Sarah announces an emergency handoff to the configured operator for serious symptom scenarios or explicit
+David announces an emergency handoff to the configured operator for serious symptom scenarios or explicit
 transfer tests, without requiring repeated simulation confirmation or complete intake.
 An explicitly actual emergency retains direct emergency-services guidance.
 Spoken introductions do not routinely say "demo"; neither assistant may claim this
@@ -141,9 +148,9 @@ SSE. Only the fixed test destination is permitted. If Vapi reports a failed
 transfer and resumes the assistant, the prompt explains failure without claiming
 that help was sent. Do not assume a transfer request means the destination answered.
 
-The handoff assistant uses Sarah's Elliot voice and the previous conversation.
+The handoff assistant uses David's Elliot voice and the previous conversation.
 It calls `transferSuccessful` after a human accepts, or `transferCancel` for
-rejection or automated answering. The fallback returns the caller to Sarah.
+rejection or automated answering. The fallback returns the caller to David.
 See [assistant-based warm transfers](https://docs.vapi.ai/calls/assistant-based-warm-transfer).
 Actual ringing, summary audio, connection, and no-answer behavior must be tested
 on the connected phone number. A test call can ring the configured operator.

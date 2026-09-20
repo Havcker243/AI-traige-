@@ -1,50 +1,16 @@
 <claude-mem-context>
 # Memory Context
 
-# [AI-traige-] recent context, 2026-09-20 6:23am EDT
+# [AI-traige-] recent context, 2026-09-20 10:25am EDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 50 obs (17,538t read) | 492,589t work | 96% savings
+Stats: 50 obs (17,000t read) | 890,124t work | 98% savings
 
-### Sep 19, 2026
-704 8:46p 🔵 Cal.com POST /v2/bookings Endpoint Confirmed Reachable — HTTP 204 on OPTIONS Preflight
-705 8:47p 🔵 Cal.com Booking API v2 Exact Request Format Confirmed — Required Fields and Headers Documented
-707 8:48p 🟣 cal-booking.js Created — Cal.com Booking Module with Slot Lookup and Placeholder Email
-708 " 🔴 Two Cal.com Booking API Errors Fixed — phoneNumber Field Rejected; Placeholder Email Domain Also Rejected
-709 " 🔴 Placeholder Email Fixed — AgentMail Subaddress Pattern Passes Cal.com Domain Validation
-710 " 🟣 doctor-notes.js Created and Booking + Doctor Email Modules Imported into server.js
-711 " 🟣 book_appointment Tool and Full Tool-Call Resolution Loop Added to server.js
-712 8:49p 🟣 /chat/completions Route Handler Rewritten to Use resolveCompletion() — Booking Flow Fully Wired
-713 " 🟣 Step 9B BOOKING Added to System Prompt — Sarah Now Has Explicit Instructions to Call book_appointment Tool
-714 " 🟣 Server Restarted with Full Booking Integration Live — Health Check Confirmed
-715 " 🟣 End-to-End Booking Flow Confirmed Working — Real Cal.com Appointment Booked and Confirmed to Caller
-716 " 🔵 Cal.com Booking Confirmed in Database — Jamie Booking Live; Cal.com Auto-Confirmation Received in AgentMail Inbox
-717 8:56p ⚖️ SMS Confirmation Flow Defined — Text Booking Link to Caller's Number, Optionally Collect Email for Full Confirmation
-718 8:57p 🔵 No Twilio Credentials in .env — SMS Feature Blocked Pending Twilio Account Setup
-719 " ⚖️ SMS Scope Simplified — Part 2 Dropped; Only Send Plain Confirmation Text with Time, Date, and Location
 ### Sep 20, 2026
-727 1:50a 🔵 PowerShell Invoke-RestMethod Fails Against ngrok Tunnel Due to TLS Error
-728 " 🔵 create-assistant.js Prompt Patch Keeps Toggling — Live Assistant Remains in Sync
-729 1:51a 🔵 ngrok Tunnel Confirmed Reachable from Outside Sandbox with Escalated Permissions
-730 2:28a 🔵 AI-Triage Project Structure Discovered
-731 " 🔵 Server.js: Vapi-to-OpenAI Proxy with Tool Execution Architecture
-732 " ⚖️ Red-Flag Keyword Override Disabled: LLM Handles Emergency Escalation
-733 " 🔵 Cal.com Placeholder Email Pattern via AgentMail
-734 " 🔵 SMS via AgentPhone: No-Retry Policy on Timeout
-735 " 🔵 Doctor Notes: Fire-and-Forget AgentMail Email After Booking
-736 " 🔴 package.json Has Unresolved Git Merge Conflict
-737 " 🔵 Vapi Assistant "Sarah" Uses STCC 2026 Triage Methodology
-738 2:30a 🔵 Test Suite: 8 Unit Tests Cover SMS, Booking, and Proxy Behavior
-739 " 🔵 Operational Scripts: check-live.js Validates Full Stack Health in One Command
-740 " 🔵 Backend Subproject: TypeScript+MongoDB Persistence Layer (Incomplete/Stub)
-741 " 🔴 Two Files Have Unresolved Git Merge Conflicts: package.json and README.md
-742 2:44a ⚖️ Major Architecture Decisions: Backend Integration, 911 Calling, SMS, and Triage Logic
-743 3:13a ⚖️ Final Feature Decisions: Warm Transfer Confirmed, Booking Offer Not Mandatory, MongoDB First
-744 " 🔵 MongoDB Connection Module Uses MONGODB_URI and MONGODB_DB Env Vars
-746 " 🟣 MongoDB Driver Installed in Root Project for Direct DB Integration
+744 3:13a 🔵 MongoDB Connection Module Uses MONGODB_URI and MONGODB_DB Env Vars
 745 " 🔵 MongoDB Backend Schema Fully Defined But MONGODB_URI Missing from .env
 747 3:27a 🔵 MongoDB Not Installed Locally on Windows — Atlas Required
 748 3:41a ⚖️ Database Backend Switched from MongoDB to Supabase
@@ -56,35 +22,78 @@ Stats: 50 obs (17,538t read) | 492,589t work | 96% savings
 753 3:59a 🔵 MongoDB Atlas Cluster DNS Resolves — 3-Shard Cluster Confirmed Reachable
 755 " ✅ MongoDB Atlas Network Access IP Whitelist Configured by User
 756 " 🔵 TLS Handshake to Atlas Fails with WSAECONNRESET — IP Whitelist Likely Not Active Yet
-S271 MongoDB Atlas IP whitelist confirmed added — TCP connectivity re-verified, primary session still asking user to check Atlas Network Access (Sep 20, 3:59 AM)
-S272 MongoDB Atlas TLS connection blocked by local network/firewall SNI filtering — debugging connectivity issue (Sep 20, 4:08 AM)
 757 4:08a 🔵 User Switched to Different Network to Bypass SNI Filtering
 758 " 🔵 TLS Block Persists After Network Switch — Confirmed Machine-Level Filtering
-S273 Wire MongoDB backend into the AI triage agent — store call transcripts, patient info, and booking data; deploy updated Vapi assistant prompt with save_patient_info tool instructions (Sep 20, 4:09 AM)
 759 4:14a 🔵 Atlas TLS Block Was IP Whitelist Issue — New Network Has Different IP Not Yet Whitelisted
 760 4:15a 🟣 MongoDB Atlas Connection Authenticated and Verified — Database "agent-triage" Reachable
 761 " 🟣 db.js Created — CommonJS MongoDB Persistence Layer for Triage Calls
-S274 Wire MongoDB sex field + add disposition tracking, callerPhone persistence, and full Vapi end-of-call-report storage to triage_calls collection (Sep 20, 4:20 AM)
-S276 MongoDB persistence + transcript wiring complete; now adding Doctor Moyo name to SMS confirmation messages in agentphone-sms.js (Sep 20, 4:23 AM)
-S275 Full MongoDB persistence layer + disposition tracking + callerPhone + full Vapi end-of-call-report — complete end-to-end wiring and deployment to live assistant 590707fb (Sep 20, 4:24 AM)
-S277 Disposition ladder enforcement + Doctor Moyo SMS + no-same-day booking enforcement + Vapi warm transfer research (Sep 20, 4:25 AM)
-S278 Research Vapi transferCall mechanics for custom LLM setup — how to add warm transfer to 911 relay (Sep 20, 4:28 AM)
-S279 Reading server.js buildOpenAIBody to understand tool injection before implementing transferCall passthrough (Sep 20, 4:29 AM)
-S280 Verification reads confirming agentphone-sms.js edits and server.js buildOpenAIBody state (Sep 20, 4:30 AM)
-**Investigated**: - Re-read server.js buildOpenAIBody (lines 140-170) — same content as previous read, no changes
-    - Re-read agentphone-sms.js lines 1-22 — confirming post-edit state
+769 4:30a 🟣 SMS confirmation always includes real location via DEFAULT_LOCATION fallback
+770 " 🔄 buildOpenAIBody merges Vapi native tools with custom function tools
+771 " 🟣 Same-day booking hard-blocked in cal-booking.js slot selection
+772 " ⚖️ Disposition ladder simplified from 3-tier to 2-tier (emergency/routine)
+818 6:33a 🔵 check-db.js Utility Script Exists for MongoDB Atlas Connectivity Verification
+781 6:45a 🟣 Warm emergency transfer to demo operator implemented end-to-end
+782 " 🟣 office-config.js created as single source of truth for practice details
+783 " 🟣 Assistant renamed Sarah → David, system prompt updated for demo transfer context
+784 " 🔄 server.js major refactor: sendCompletion extracted, resolveCompletion injectable, executeTool hardened
+785 " 🟣 Test suite expanded from 9 to 19 tests covering transfer, patient save, and slot selection
+786 " 🔄 db.js hardened: savePatientInfo returns false, DNS config, MongoClient timeouts added
+787 6:46a ✅ Server restarted with current code after stale process detected; live deployment verified
+788 9:43a ✅ Full session summary: warm transfer + disposition + SMS + booking enforcement all deployed
+S282 Full project audit requested — verified all work done/not done, ran live smoke test, surfaced open questions about assistant name and transfer number (Sep 20, 9:43 AM)
+789 9:44a 🟣 smoke-live.js created: synthetic end-to-end integration test for transfer tool passthrough
+790 " 🔵 Assistant was already named "David" from a prior commit; "Sarah" is the older name
+791 " 🔵 smoke-live.js: transfer passthrough confirmed working; Atlas connectivity failing with ECONNRESET
+S283 Replace AgentPhone SMS with Twilio for outbound appointment confirmation texts — user provided trial number +17372583742 and Account SID [REDACTED_TWILIO_ACCOUNT_SID], awaiting Auth Token to complete wiring (Sep 20, 9:45 AM)
+792 9:54a ⚖️ Twilio SMS migration started: trial number +17372583742 provided, AgentPhone to be replaced
+793 " 🔄 agentphone-sms.js now imports DOCTOR_NAME and OFFICE_LOCATION from office-config.js
+794 " 🟣 twilio-sms.js created: drop-in replacement for agentphone-sms.js using Twilio Messages API
+795 9:55a 🟣 server.js switched to twilio-sms.js; .env scaffolded with Twilio credentials placeholders
+796 " 🔵 agentphone-sms.test.js imports directly from agentphone-sms — requires separate twilio-sms.test.js, not an update
+S284 Twilio SMS integration — live test revealed trial account blocks all free-text SMS (error 572006); investigating workarounds or upgrade path (Sep 20, 9:57 AM)
+S285 Twilio trial SMS — probed for appointment-related template names; only 'sms_delivery_updates' confirmed valid; no appointment-specific template exists; upgrade to paid account is the fix (Sep 20, 9:59 AM)
+S287 Twilio trial SMS limitation fully exhausted — Content API also blocked (error 20003); upgrading to paid account is the only path to send real appointment confirmation content (Sep 20, 10:04 AM)
+S288 Twilio SMS integration for appointment confirmation texts — full implementation complete and tested; blocked by trial account restrictions; upgrade to paid is the only fix (Sep 20, 10:04 AM)
+S286 Twilio trial SMS template exploration complete — 'sms_appointment_reminders' found but sends wrong fixed date/time; decision needed: upgrade to paid or leave SMS off for now (Sep 20, 10:04 AM)
+S289 Full system readiness check complete — voice/booking/doctor notes/transfer all live; two blockers remain: MongoDB Atlas IP allowlist and Twilio trial restriction; user deciding whether to fix Atlas IP or test a live call now without DB persistence (Sep 20, 10:04 AM)
+808 10:07a ⚖️ SMS confirmation replaced with AgentMail email for demo — patient email set to nguyenthy1325@gmail.com
+809 " 🔵 Cal.com bookings confirmed working — 3 real bookings from caller +16572667556, all accepted for 2026-09-21
+S290 User pivoted from SMS to AgentMail email for appointment confirmations — demo patient email is nguyenthy1325@gmail.com; also asked to check last Twilio transaction and last call (Sep 20, 10:08 AM)
+810 10:13a 🔵 Server logs confirm real call happened — MongoDB upsertTranscript failed 18 times with SSL alert 80 (TLS internal error)
+811 10:14a 🔵 Most recent Cal.com booking confirmed stale — last real call was Julie at 02:20 UTC, no new call since
+812 " 🔵 Server log has no entries for book_appointment, doctor-notes, or transferCall — only DB error logged from end-of-call webhook
+813 10:15a 🔵 server.js book_appointment flow: SMS awaited inline; doctor notes and recordBooking are fire-and-forget — patient email can be added as third fire-and-forget
+814 " 🟣 patient-notification.js created — sends appointment confirmation email to nguyenthy1325@gmail.com via AgentMail after booking
+815 " 🟣 sendPatientConfirmationEmail wired into book_appointment as fire-and-forget — emails nguyenthy1325@gmail.com on every booking
+816 10:16a 🔴 Existing tests will call real sendPatientConfirmationEmail — need to add mock to test deps
+817 " 🔴 patient-save.test.js also missing sendPatientConfirmationEmail mock — will call real AgentMail in tests
+819 " 🔵 MongoDB Atlas Connection Failing with MongoServerSelectionError
+820 " 🔵 MongoDB Atlas Unreachable Even Outside Claude Sandbox — IP Allowlist Likely Culprit
+S291 Wire AgentMail to send appointment confirmation emails to demo patient (nguyenthy1325@gmail.com) after each successful booking, and verify the full pipeline works end-to-end (Sep 20, 10:18 AM)
+**Investigated**: - patient-save.test.js deps object (was missing sendPatientConfirmationEmail mock — would have called real AgentMail during tests)
+    - Running node processes (PID 47912: server.js, PID 8952: stale check-db.js)
+    - Server health at both localhost:3000 and ngrok tunnel (bulbar-gruntingly-roxy.ngrok-free.dev)
+    - Live AgentMail send to nguyenthy1325@gmail.com with test booking data (2026-10-01T14:00:00Z, America/New_York)
 
-**Learned**: agentphone-sms.js confirmed state after edits:
-    - Line 2: `const DOCTOR_NAME = 'Doctor Moyo'; // hardcoded for now — swap when a real on-call rotation exists`
-    - Line 15: `const lines = [\`Your appointment with ${DOCTOR_NAME} is confirmed for ${when} (${timeZone}).\`];`
-    - Location line still present: pushes "Location: ..." if booking.location is a string, otherwise "Contact the office for location details."
-    - File is now 62 lines (was 61 before the DOCTOR_NAME constant was added)
-    Both SMS edits are confirmed in place.
+**Learned**: - AgentMail send is confirmed working: test POST returned message_id &lt;010001a0bf2d0718-03f02eb7-e177-4a44-8e02-0a11b0d70572-000000@email.amazonses.com&gt; and thread_id 3bf4fa55-9631-4d0c-b6f7-fb1a956a27fe — email delivered via Amazon SES
+    - buildConfirmation() from twilio-sms.js correctly formats the email body with doctor name, appointment time (localized to America/New_York), and office location
+    - Server restart was needed: stale PID 47912 predated patient-notification.js being wired into server.js; new process is now running with the full feature active
+    - Both local and ngrok health checks return {"ok":true} — server is up and reachable by Vapi
+    - Twilio trial SMS remains blocked (error 572006 on free-text Body) but email path is fully independent and working
+    - MongoDB Atlas TLS rejection (SSL alert 80) from IP 172.56.193.143 is still an open issue — all recordBooking/upsertTranscript calls will fail until Atlas IP allowlist is updated
 
-**Completed**: Same as previous checkpoint — all prior changes confirmed in file state.
+**Completed**: - Added sendPatientConfirmationEmail: async () => {} mock to patient-save.test.js deps object
+    - All 24 tests pass (0 fail) — no live HTTP calls during test runs
+    - Sent real test confirmation email via AgentMail to nguyenthy1325@gmail.com — confirmed delivered (Amazon SES message_id returned)
+    - Killed stale server process (PID 47912) and restarted server.js with new patient-notification.js wiring active
+    - Server health confirmed at both localhost:3000 and public ngrok tunnel
+    - Full booking-to-email pipeline is now live: book_appointment → sendPatientConfirmationEmail(booking) fire-and-forget → AgentMail POST → nguyenthy1325@gmail.com
 
-**Next Steps**: Still working toward warm transfer implementation. Next reads expected: resolveCompletion function in server.js (to understand the full tool execution loop before modifying it), then implementation of the transferCall feature. The approach being considered: add a custom function tool "transfer_to_911" that our server intercepts, then returns a Vapi-compatible transferCall signal rather than a tool result — this avoids needing to put transferCall in the Vapi assistant's model.tools at all, keeping all tool logic server-side.
+**Next Steps**: - User should check nguyenthy1325@gmail.com inbox to confirm the test email landed correctly (subject: "Your appointment is confirmed", body should show Doctor Moyo, Oct 1 2026 10:00 AM EDT, MIT School of Nursing Left Wing)
+    - Make a real booking call through Vapi to trigger the full end-to-end flow and verify the email arrives with actual booking data
+    - Fix MongoDB Atlas IP allowlist: add 172.56.193.143 (or 0.0.0.0/0) at cloud.mongodb.com → Network Access → IP Access List so recordBooking and upsertTranscript stop failing
+    - Twilio upgrade: deferred to user — when account is upgraded from trial, twilio-sms.js will send real appointment content with zero code changes
 
 
-Access 493k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 890k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>
