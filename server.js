@@ -501,7 +501,7 @@ app.post('/vapi/webhook', async (req, res) => {
 
   if (callId && message?.type === 'end-of-call-report') {
     try {
-      await trackDb('end_of_call_report', callId, () => recordEndOfCallReport(callId, message));
+      await trackDb('end_of_call_report', callId, () => recordEndOfCallReport(callId, message, callerPhone));
     } catch {
       console.error('[db] end-of-call report could not be saved');
       return res.status(503).json({ received: false });

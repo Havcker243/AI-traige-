@@ -167,9 +167,15 @@ export function applyEvent(calls, event) {
       call.endedAt = event.ts;
       call.endReason = d.reason || call.endReason;
       call.summary = d.summary || call.summary;
+      call.durationSeconds = d.durationSeconds ?? call.durationSeconds;
       call.activeStage = null;
       call.activeTool = null;
       call.speaking = null;
+      break;
+    case 'call.summary':
+      call.endReason = d.reason || call.endReason;
+      call.summary = d.summary || call.summary;
+      call.durationSeconds = d.durationSeconds ?? call.durationSeconds;
       break;
     default:
       break;

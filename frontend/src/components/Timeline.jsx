@@ -17,6 +17,7 @@ const LABELS = {
   'db.skipped': ['MongoDB skipped', 'db'],
   'webhook.received': ['Vapi webhook', 'vapi'],
   'call.ended': ['Call ended', 'vapi'],
+  'call.summary': ['End-of-call report', 'vapi'],
   error: ['Error', 'error']
 };
 
@@ -38,7 +39,8 @@ function describe(e) {
     case 'db.failed': return `${d.op}: ${d.error}`;
     case 'db.skipped': return `${d.op} — ${d.reason}`;
     case 'webhook.received': return d.type;
-    case 'call.ended': return `${d.reason || ''}${d.durationSeconds ? ` · ${d.durationSeconds}s` : ''}`;
+    case 'call.ended':
+    case 'call.summary': return `${d.reason || ''}${d.durationSeconds ? ` · ${d.durationSeconds}s` : ''}`;
     case 'error': return `${d.where}: ${d.message}`;
     default: return JSON.stringify(d);
   }

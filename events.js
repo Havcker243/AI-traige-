@@ -45,7 +45,12 @@ function emitCallStarted(callId, data = {}) {
 }
 
 function emitCallEnded(callId, data = {}) {
-  if (callId && !markTracked(endedCallIds, callId)) return null;
+  if (callId && !markTracked(endedCallIds, callId)) {
+    const details = Object.fromEntries(
+      Object.entries(data).filter(([, value]) => value !== null && value !== undefined)
+    );
+    return Object.keys(details).length ? emitEvent('call.summary', callId, details) : null;
+  }
   return emitEvent('call.ended', callId, data);
 }
 

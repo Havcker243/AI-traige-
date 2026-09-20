@@ -76,6 +76,25 @@ test('webhook events include transcripts and deduplicate ended calls', async () 
   assert.ok(events.some((event) => event.type === 'webhook.received'));
   assert.ok(events.some((event) => event.type === 'transcript' && event.data.text === 'hello'));
   assert.equal(events.filter((event) => event.type === 'call.ended').length, 1);
+
+  const reportResponse = await fetch(`http://127.0.0.1:${port}/vapi/webhook`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      message: {
+        type: 'end-of-call-report',
+        endedReason: 'customer-ended-call',
+        durationSeconds: 212,
+        summary: 'Routine sore throat',
+        call: { id: 'c1' }
+      }
+    })
+  });
+  assert.equal(reportResponse.status, 200);
+  const after = recentEvents().filter((event) => event.callId === 'c1');
+  assert.equal(after.filter((event) => event.type === 'call.ended').length, 1);
+  const summary = after.find((event) => event.type === 'call.summary');
+  assert.deepEqual(summary.data, { reason: 'customer-ended-call', durationSeconds: 212, summary: 'Routine sore throat' });
   await new Promise((resolve) => server.close(resolve));
 });
 

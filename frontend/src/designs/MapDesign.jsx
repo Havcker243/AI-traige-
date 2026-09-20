@@ -300,6 +300,7 @@ function short(e) {
     case 'db.failed': return `MongoDB failed ${d.op}`;
     case 'webhook.received': return `Webhook ${d.type}`;
     case 'call.ended': return 'Call ended';
+    case 'call.summary': return 'End-of-call report received';
     case 'error': return `Error: ${d.message}`;
     default: return e.type;
   }

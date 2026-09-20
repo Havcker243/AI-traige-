@@ -124,7 +124,7 @@ async function endCall(callId) {
 // sends — recording URL, cost, analysis, exact duration, etc. — is ever lost to a
 // field name we didn't think to pull out, plus convenience top-level copies of the
 // fields we know we'll want to query on directly.
-async function recordEndOfCallReport(callId, message) {
+async function recordEndOfCallReport(callId, message, callerPhone) {
   if (!callId) return;
   const calls = await getCalls();
   if (!calls || !callId) return;
@@ -143,10 +143,19 @@ async function recordEndOfCallReport(callId, message) {
   }
   if (message?.summary) updates.vapiSummary = message.summary;
   if (typeof message?.cost === 'number') updates.cost = message.cost;
+  if (callerPhone) updates.callerPhone = callerPhone;
 
   await calls.updateOne(
     { callId },
-    { $set: updates },
+    {
+      $set: updates,
+      $setOnInsert: {
+        callId,
+        patient: {},
+        transcript: [],
+        createdAt: message?.startedAt ? new Date(message.startedAt) : new Date()
+      }
+    },
     { upsert: true }
   );
 }
