@@ -36,14 +36,14 @@ export default function App() {
     [calls]
   );
 
-  useEffect(() => {
-    if (!follow || !liveCalls.length) return;
+  const followedId = useMemo(() => {
+    if (!liveCalls.length) return null;
     const active = liveCalls.find((c) => c.status !== 'ended') || liveCalls[0];
-    const key = active.callId || '__no_call__';
-    if (key !== selectedId) setSelectedId(key);
-  }, [follow, liveCalls, selectedId]);
+    return active.callId || '__no_call__';
+  }, [liveCalls]);
 
-  const selected = selectedId ? calls[selectedId] : null;
+  const effectiveId = follow ? followedId : selectedId;
+  const selected = effectiveId ? calls[effectiveId] : null;
   const selectedEvents = selected ? selected.events : feed;
 
   const simulate = async (scenario) => {
@@ -75,7 +75,7 @@ export default function App() {
       </header>
 
       <main className="grid">
-        <CallList liveCalls={liveCalls} history={history} selectedId={selectedId} onSelect={(id) => { setFollow(false); setSelectedId(id); }} />
+        <CallList liveCalls={liveCalls} history={history} selectedId={effectiveId} onSelect={(id) => { setFollow(false); setSelectedId(id); }} />
         <div className="center">
           <Pipeline call={selected} config={config} />
           <Timeline events={selectedEvents} />
