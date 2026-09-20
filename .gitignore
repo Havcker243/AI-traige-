@@ -4,4 +4,5 @@ node_modules/
 backend/.env
 backend/node_modules/
 backend/dist/
-.venv
+.venvfrontend/node_modules/
+frontend/dist/

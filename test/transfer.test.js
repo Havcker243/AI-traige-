@@ -34,7 +34,7 @@ test('assistant has a native warm transfer with transcript summary and end-of-ca
     assert.match(tool.destinations[0].transferPlan.transferAssistant.model.messages[0].content, /transferSuccessful/);
     assert.match(tool.destinations[0].transferPlan.transferAssistant.model.messages[0].content, /transferCancel/);
     assert.equal(payload.server.url, 'https://example.com/vapi/webhook');
-    assert.deepEqual(payload.serverMessages, ['end-of-call-report']);
+    assert.deepEqual(payload.serverMessages, ['end-of-call-report', 'status-update', 'transcript', 'speech-update']);
   } finally {
     if (previous === undefined) delete process.env.SAFETY_NET_URL;
     else process.env.SAFETY_NET_URL = previous;

@@ -116,7 +116,7 @@ async function recordDisposition(callId, { disposition, chiefComplaint, redFlag 
 // sends — recording URL, cost, analysis, exact duration, etc. — is ever lost to a
 // field name we didn't think to pull out, plus convenience top-level copies of the
 // fields we know we'll want to query on directly.
-async function recordEndOfCallReport(callId, message) {
+async function recordEndOfCallReport(callId, message, callerPhone) {
   if (!callId) return;
   const calls = await getCalls();
   if (!calls) return;
@@ -135,10 +135,19 @@ async function recordEndOfCallReport(callId, message) {
   }
   if (message?.summary) updates.vapiSummary = message.summary;
   if (typeof message?.cost === 'number') updates.cost = message.cost;
+  if (callerPhone) updates.callerPhone = callerPhone;
 
   await calls.updateOne(
     { callId },
-    { $set: updates },
+    {
+      $set: updates,
+      $setOnInsert: {
+        callId,
+        patient: {},
+        transcript: [],
+        createdAt: message?.startedAt ? new Date(message.startedAt) : new Date()
+      }
+    },
     { upsert: true }
   );
 }
@@ -150,6 +159,15 @@ async function getCall(callId) {
   return calls.findOne({ callId });
 }
 
+async function listCalls(limit = 50) {
+  const calls = await getCalls();
+  if (!calls) return [];
+  return calls.find({}, { projection: { vapiReport: 0 } })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .toArray();
+}
+
 async function getPatientInfo(callId) {
   const call = await getCall(callId);
   return call?.patient || {};
@@ -157,5 +175,5 @@ async function getPatientInfo(callId) {
 
 module.exports = {
   upsertTranscript, savePatientInfo, recordBooking, recordDisposition,
-  recordEndOfCallReport, getCall, getPatientInfo
+  recordEndOfCallReport, getCall, listCalls, getPatientInfo
 };

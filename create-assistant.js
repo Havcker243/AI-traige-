@@ -94,7 +94,7 @@ const buildAssistantPayload = () => ({
     voiceId: 'Elliot'
   },
   server: { url: new URL('/vapi/webhook', process.env.SAFETY_NET_URL).href },
-  serverMessages: ['end-of-call-report']
+  serverMessages: ['end-of-call-report', 'status-update', 'transcript', 'speech-update']
 });
 
 const main = async () => {
