@@ -18,12 +18,16 @@
 
 .mp-map { padding: 20px 28px 0; }
 .mp-map svg { width: 100%; height: auto; max-height: 46vh; display: block; }
-.mp-link { fill: none; stroke: var(--line); stroke-width: 2; color: var(--line); transition: all .3s; }
-.mp-link.done { stroke: #9db4f0; color: #9db4f0; }
-.mp-link.hot { stroke: var(--accent); color: var(--accent); stroke-width: 3; stroke-dasharray: 8 6; animation: mp-dash .6s linear infinite; }
+.mp-link path { fill: none; stroke: var(--line); stroke-width: 2; transition: stroke .3s; }
+.mp-link.done path { stroke: currentColor; opacity: .45; }
+.mp-link.hot path { stroke: currentColor; stroke-width: 3; opacity: 1; stroke-dasharray: 8 6; animation: mp-dash .5s linear infinite; }
+.mp-packet { fill: currentColor; stroke: #fff; stroke-width: 2; filter: drop-shadow(0 0 6px currentColor); }
 .mp-node rect { fill: #fff; stroke: var(--line); stroke-width: 1.5; transition: all .3s; }
-.mp-node.done rect { stroke: var(--accent); }
-.mp-node.hot rect { fill: var(--accent); stroke: var(--accent); filter: drop-shadow(0 6px 16px rgba(37,99,235,.35)); }
+.mp-node .mp-node-bar { fill: currentColor; stroke: none; opacity: .35; }
+.mp-node.done rect { stroke: currentColor; }
+.mp-node.done .mp-node-bar { opacity: 1; }
+.mp-node.hot rect { fill: currentColor; stroke: currentColor; filter: drop-shadow(0 6px 16px currentColor); }
+.mp-node.hot .mp-node-bar { fill: #fff; opacity: .6; }
 .mp-node-title { font-size: 15px; font-weight: 700; fill: var(--ink); transition: fill .3s; }
 .mp-node-sub { font-size: 11px; fill: var(--sub); transition: fill .3s; }
 .mp-node.hot .mp-node-title, .mp-node.hot .mp-node-sub { fill: #fff; }

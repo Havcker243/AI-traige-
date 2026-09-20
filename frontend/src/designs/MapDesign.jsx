@@ -5,6 +5,14 @@ import './map.css';
 
 const FALLBACK_CONFIG = { voice: { provider: 'vapi', voiceId: 'Elliot' }, transcriber: { provider: 'deepgram', model: 'nova-2-general' }, model: { provider: 'custom-llm', model: 'gpt-4o-mini' }, transferNumber: '' };
 
+const COLORS = {
+  caller: '#0ea5e9', vapi: '#8b5cf6', stt: '#f59e0b', proxy: '#334155', llm: '#10b981', tts: '#ec4899',
+  mongo: '#16a34a', cal: '#2563eb', sms: '#0d9488', mail: '#ea580c', transfer: '#dc2626'
+};
+
+// How long a link keeps "flowing" after the last piece of information crossed it.
+const FLOW_MS = 2600;
+
 // Node layout in a 1200 x 400 viewBox. Main chain on the top row, services on the bottom row.
 const W = 150; const H = 64;
 const NODES = {
@@ -59,6 +67,38 @@ function activity(call) {
   return m ? { node: m[0], link: m[1] } : { node: null, link: null };
 }
 
+// Links that carried information for each event type.
+function linksFor(e) {
+  const d = e.data || {};
+  switch (e.type) {
+    case 'call.started': return ['caller-vapi'];
+    case 'speech': return d.role === 'user' ? ['caller-vapi', 'vapi-stt'] : ['llm-tts', 'caller-vapi'];
+    case 'transcript': return d.role === 'user' ? ['vapi-stt', 'stt-proxy'] : ['llm-tts'];
+    case 'turn.received': return ['stt-proxy'];
+    case 'llm.request': case 'llm.response': return ['proxy-llm'];
+    case 'tool.started': case 'tool.finished':
+      if (d.name === 'book_appointment') return e.type === 'tool.finished' ? ['proxy-cal', 'cal-sms', 'cal-mail'] : ['proxy-cal'];
+      if (d.name === 'transferCall') return ['vapi-transfer'];
+      return ['proxy-mongo'];
+    case 'db.saved': case 'db.failed': case 'db.skipped': return ['proxy-mongo'];
+    case 'transfer.returned': return ['proxy-llm', 'vapi-transfer'];
+    case 'response.sent': return ['proxy-llm', 'llm-tts'];
+    case 'call.ended': return ['caller-vapi'];
+    default: return [];
+  }
+}
+
+function flowingLinks(call, now) {
+  const s = new Set();
+  if (!call || call.status === 'ended') return s;
+  for (let i = call.events.length - 1; i >= 0; i--) {
+    const e = call.events[i];
+    if (now - new Date(e.ts).getTime() > FLOW_MS) break;
+    for (const l of linksFor(e)) s.add(l);
+  }
+  return s;
+}
+
 function visited(call) {
   const s = new Set();
   if (!call) return s;
@@ -93,7 +133,10 @@ export default function MapDesign({ onSwitch }) {
   const [rawConfig, setRawConfig] = useState(FALLBACK_CONFIG);
   const [simulating, setSimulating] = useState(false);
   const [pinned, setPinned] = useState(null);
+  const [now, setNow] = useState(() => Date.now());
   const endRef = useRef(null);
+
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 400); return () => clearInterval(t); }, []);
 
   useEffect(() => { fetch('/api/config').then((r) => r.json()).then(setRawConfig).catch(() => {}); }, []);
 
@@ -108,6 +151,7 @@ export default function MapDesign({ onSwitch }) {
   const call = (pinned && calls[pinned]) || auto;
   const act = activity(call);
   const seen = visited(call);
+  const flowing = flowingLinks(call, now);
 
   useEffect(() => { endRef.current?.scrollIntoView({ block: 'nearest' }); }, [call?.transcript.length]);
 
@@ -142,19 +186,33 @@ export default function MapDesign({ onSwitch }) {
       <section className="mp-map">
         <svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <marker id="mp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" /></marker>
+            {[['idle', '#d9dee7'], ...Object.entries(COLORS)].map(([id, fill]) => (
+              <marker key={id} id={`mp-arrow-${id}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill={fill} /></marker>
+            ))}
           </defs>
           {LINKS.map(([a, b]) => {
             const id = `${a}-${b}`;
-            const hot = act.link === id;
+            const hot = flowing.has(id) || act.link === id;
             const done = seen.has(a) && seen.has(b);
-            return <path key={id} d={path(a, b)} className={`mp-link ${hot ? 'hot' : done ? 'done' : ''}`} markerEnd="url(#mp-arrow)" />;
+            const d = path(a, b);
+            const color = COLORS[b];
+            return (
+              <g key={id} className={`mp-link ${hot ? 'hot' : done ? 'done' : ''}`} style={{ color }}>
+                <path d={d} markerEnd={`url(#mp-arrow-${hot || done ? b : 'idle'})`} />
+                {hot && [0, 0.5].map((delay) => (
+                  <circle key={delay} r="5" className="mp-packet">
+                    <animateMotion dur="1s" begin={`${delay}s`} repeatCount="indefinite" path={d} />
+                  </circle>
+                ))}
+              </g>
+            );
           })}
           {Object.entries(NODES).map(([id, n]) => {
             const hot = act.node === id;
             const done = seen.has(id);
             return (
-              <g key={id} className={`mp-node ${hot ? 'hot' : done ? 'done' : ''}`} transform={`translate(${n.x},${n.y})`}>
+              <g key={id} className={`mp-node ${hot ? 'hot' : done ? 'done' : ''}`} style={{ color: COLORS[id] }} transform={`translate(${n.x},${n.y})`}>
+                <rect className="mp-node-bar" width="6" height={H} rx="3" />
                 <rect width={W} height={H} rx="12" />
                 <text x={W / 2} y="27" textAnchor="middle" className="mp-node-title">{n.title}</text>
                 <text x={W / 2} y="47" textAnchor="middle" className="mp-node-sub">{subFor(id)}</text>
