@@ -5,14 +5,14 @@ const express = require('express');
 const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
 const { createBooking } = require('./cal-booking');
 const { sendDoctorNotes } = require('./doctor-notes');
-const { sendBookingConfirmation, normalizePhone } = require('./twilio-sms');
+// SMS is disabled; confirmations are sent through patient-notification.
 const { sendPatientConfirmationEmail } = require('./patient-notification');
 const { upsertTranscript, savePatientInfo, recordBooking, recordDisposition, recordEndOfCallReport, getPatientInfo } = require('./db');
 const { validateTransfer } = require('./transfer-config');
 
 const BOOKING_INSTRUCTIONS = {
   role: 'system',
-  content: 'Booking update: appointment confirmation texts are now supported via book_appointment. This replaces earlier statements that texting is unavailable. Before booking, ask whether the caller wants a confirmation text. If yes, collect and read back their mobile number including country code, and obtain confirmation before passing it as smsPhone with smsConsent=true. If they decline, book with smsConsent=false. Never assume caller ID is permission or a confirmed SMS number. Do not delay emergency assistance for booking or texting. After the tool returns, report the actual appointment time and time zone. Only say the text was submitted if sms.status is submitted; this does not confirm delivery. Only say delivered when sms.status is delivered. Otherwise explain the booking is confirmed but the text could not be confirmed/sent, and read the appointment details aloud. Never book again to retry a text. Do not promise an office callback unless it has actually been arranged.'
+  content: 'Booking update: SMS is disabled. Do not offer texts, ask for texting permission, or collect an SMS number. After the caller agrees to book, call book_appointment with callerName. Read the confirmed date, time, time zone and location aloud. A custom confirmation email goes to the configured project inbox, not a caller-provided address; do not promise email delivery to the caller. Never rebook to retry a notification.'
 };
 
 const app = express();
@@ -91,11 +91,9 @@ const BOOK_APPOINTMENT_TOOL = {
     parameters: {
       type: 'object',
       properties: {
-        callerName: { type: 'string', description: "The caller's name, as given during the call." },
-        smsConsent: { type: 'boolean', description: 'True only after explicit permission to send the appointment confirmation and confirmation of smsPhone.' },
-        smsPhone: { type: 'string', description: 'Mobile number read back and confirmed by the caller, including + and country code. Omit if they decline SMS.' }
+        callerName: { type: 'string', description: "The caller's name, as given during the call." }
       },
-      required: ['callerName', 'smsConsent']
+      required: ['callerName']
     }
   }
 };
@@ -193,7 +191,7 @@ async function callOpenAI(body) {
 
 async function executeTool(toolCall, context, dependencies = {}) {
   const deps = {
-    createBooking, sendDoctorNotes, sendBookingConfirmation, sendPatientConfirmationEmail,
+    createBooking, sendDoctorNotes, sendPatientConfirmationEmail,
     savePatientInfo, recordBooking, recordDisposition, getPatientInfo,
     ...dependencies
   };
@@ -230,12 +228,8 @@ async function executeTool(toolCall, context, dependencies = {}) {
   }
 
   if (toolCall.function.name === 'book_appointment') {
-    const smsPhone = normalizePhone(args.smsPhone);
-    if (typeof args.smsConsent !== 'boolean' || (args.smsConsent && !smsPhone)) {
-      return JSON.stringify({ success: false, error: 'Before booking, ask whether the caller wants an SMS. If yes, collect and confirm a mobile number including country code.' });
-    }
     try {
-      const booking = await deps.createBooking({ name: args.callerName, phone: smsPhone || context.callerPhone });
+      const booking = await deps.createBooking({ name: args.callerName, phone: context.callerPhone });
       Promise.resolve()
         .then(() => deps.getPatientInfo(context.callId))
         .catch(() => ({}))
@@ -249,25 +243,17 @@ async function executeTool(toolCall, context, dependencies = {}) {
       deps.recordBooking(context.callId, booking).catch((err) => console.error('[db] recordBooking failed:', err.message));
       deps.sendPatientConfirmationEmail(booking).catch((err) => console.error('[patient-notification] send failed:', err.message));
 
-      let sms;
-      try {
-        sms = await deps.sendBookingConfirmation({ booking, to: smsPhone, consent: args.smsConsent });
-      } catch {
-        sms = { status: 'unknown', reason: 'SMS could not be confirmed.' };
-      }
-
       return JSON.stringify({
         success: true,
         appointmentTime: booking.start,
         timeZone: booking.timeZone,
         location: booking.location,
         doctorName: booking.doctorName,
-        sms,
-        note: 'Booking confirmed regardless of SMS status. Tell the caller the date/time and time zone. Report the SMS status accurately; do not rebook to retry SMS.'
+        note: 'Booking confirmed. Read the date, time, time zone and location aloud. Email notifications are processed separately; do not claim caller delivery or rebook to retry a notification.'
       });
     } catch (err) {
       console.error('[book_appointment] failed:', err.message);
-      return JSON.stringify({ success: false, error: 'Booking could not be confirmed. No SMS sent. Ask the caller to contact the office; do not promise an automatic callback.' });
+      return JSON.stringify({ success: false, error: 'Booking could not be confirmed. Ask the caller to contact the office; do not promise an automatic callback.' });
     }
   }
 

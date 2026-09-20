@@ -56,49 +56,44 @@ function tool(args) {
 }
 const context = { messages: [], callerPhone: '+12025550103' };
 
-test('booking success survives SMS failure and passes only confirmed number for texting', async () => {
-  let bookings = 0;
-  const result = JSON.parse(await executeTool(tool({ smsConsent: true, smsPhone: input.to }), context, {
-    createBooking: async () => { bookings++; return booking; },
-    sendDoctorNotes: async () => {},
-    sendPatientConfirmationEmail: async () => {},
-    sendBookingConfirmation: async (args) => { assert.equal(args.to, '+12025550101'); throw new Error('SMS failure'); }
-  }));
-  assert.equal(result.success, true);
-  assert.equal(result.sms.status, 'unknown');
-  assert.equal(bookings, 1);
-});
-
-test('booking failure never sends an SMS', async () => {
-  let sent = false;
-  const result = JSON.parse(await executeTool(tool({ smsConsent: true, smsPhone: input.to }), context, {
-    createBooking: async () => { throw new Error('No slots'); },
-    sendDoctorNotes: async () => {},
-    sendPatientConfirmationEmail: async () => {},
-    sendBookingConfirmation: async () => { sent = true; }
-  }));
-  assert.equal(result.success, false);
-  assert.equal(sent, false);
-});
-
-test('missing consent or invalid SMS number requests clarification before booking', async () => {
-  const deps = { createBooking: () => { throw new Error('Must not book'); } };
-  for (const args of [{}, { smsConsent: true, smsPhone: 'unknown' }]) {
-    const result = JSON.parse(await executeTool(tool(args), context, deps));
-    assert.equal(result.success, false);
-    assert.match(result.error, /Before booking/);
+test('booking sends custom email and never invokes SMS, even with old SMS arguments', async () => {
+  for (const args of [{}, { smsConsent: true, smsPhone: input.to }]) {
+    let emails = 0;
+    let texts = 0;
+    const result = JSON.parse(await executeTool(tool(args), context, {
+      createBooking: async () => booking,
+      sendDoctorNotes: async () => {},
+      getPatientInfo: async () => ({}),
+      recordBooking: async () => {},
+      sendPatientConfirmationEmail: async value => { assert.equal(value, booking); emails++; },
+      sendBookingConfirmation: async () => { texts++; }
+    }));
+    assert.equal(result.success, true);
+    assert.equal(emails, 1);
+    assert.equal(texts, 0);
+    assert.equal(result.sms, undefined);
   }
 });
 
-test('declining SMS still allows booking and SMS module skips the send', async () => {
-  const result = JSON.parse(await executeTool(tool({ smsConsent: false }), context, {
-    createBooking: async () => booking,
-    sendDoctorNotes: async () => {},
-    sendPatientConfirmationEmail: async () => {},
-    sendBookingConfirmation
+test('failed booking never sends confirmation email', async () => {
+  let emails = 0;
+  const result = JSON.parse(await executeTool(tool({}), context, {
+    createBooking: async () => { throw new Error('No slots'); },
+    sendPatientConfirmationEmail: async () => { emails++; }
+  }));
+  assert.equal(result.success, false);
+  assert.equal(emails, 0);
+});
+
+test('email failure does not undo or repeat the booking', async () => {
+  let bookings = 0;
+  const result = JSON.parse(await executeTool(tool({}), context, {
+    createBooking: async () => { bookings++; return booking; },
+    sendDoctorNotes: async () => {}, getPatientInfo: async () => ({}), recordBooking: async () => {},
+    sendPatientConfirmationEmail: async () => { throw new Error('Test email failure'); }
   }));
   assert.equal(result.success, true);
-  assert.equal(result.sms.status, 'skipped');
+  assert.equal(bookings, 1);
 });
 
 test('runtime instructions update existing Vapi prompts and preserve caller messages', () => {

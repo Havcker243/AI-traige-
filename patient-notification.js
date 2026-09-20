@@ -1,10 +1,8 @@
 require('dotenv').config();
-const { buildConfirmation } = require('./twilio-sms');
+const { buildConfirmation } = require('./booking-confirmation');
 
 const AGENTMAIL_INBOX = 'oncall@agentmail.to';
-// The call flow never collects a real email from the caller, and Twilio SMS is
-// blocked on the trial account (see twilio-sms.js) — for this demo, every booking
-// confirmation is emailed here as a stand-in for "the patient's inbox."
+// Booking confirmations go to this configured project recipient. SMS is disabled.
 const PATIENT_EMAIL = 'nguyenthy1325@gmail.com';
 
 async function sendPatientConfirmationEmail(booking) {
