@@ -31,7 +31,9 @@
 .mp-bubble.hot .mp-bubble-title { fill: #fff; }
 .mp-bubble.hot .mp-bubble-sub { fill: rgba(255,255,255,.85); }
 
-.mp-bottom { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 16px; padding: 20px 28px 28px; flex: 1; min-height: 0; }
+.mp-bottom { display: grid; grid-template-columns: minmax(0, 2.5fr) minmax(0, .8fr) minmax(0, 1fr); gap: 16px; padding: 20px 28px 28px; flex: 1; min-height: 0; align-items: start; }
+.mp-transcript { height: 65vh; min-height: 420px; }
+.mp-bottom > .mp-card:not(.mp-transcript) { max-height: 45vh; overflow: auto; }
 .mp-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(20,25,40,.06); padding: 16px 18px; min-height: 0; display: flex; flex-direction: column; }
 .mp-lines { overflow: auto; flex: 1; }
 .mp-lines p { margin: 0 0 10px; font-size: 14px; line-height: 1.5; display: flex; gap: 10px; }
@@ -45,7 +47,7 @@
 .mp-warn { background: #fee2e2; color: #991b1b; border-radius: 8px; padding: 8px 10px; font-size: 13px; margin: 8px 0 0; }
 .mp dl { display: grid; grid-template-columns: 90px 1fr; row-gap: 6px; column-gap: 8px; font-size: 13px; margin-top: 12px; }
 .mp dt { color: var(--sub); }
-.mp dd { margin: 0; }
+.mp dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }
 .mp-steps li { display: flex; gap: 10px; font-size: 13px; padding: 4px 0; border-bottom: 1px solid #f1f3f6; }
 .mp-steps li span { color: var(--sub); font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
 .mp-calls-h { margin-top: 16px; }
@@ -57,3 +59,13 @@
 
 @keyframes mp-blink { 50% { opacity: .4; } }
 @media (max-width: 1000px) { .mp-bottom { grid-template-columns: 1fr; } }
+
+/* Resize individual light-mode panels using their bottom-right grips. */
+.mp-bottom { display: flex; flex-wrap: wrap; align-items: flex-start; }
+.mp-bottom > .mp-card { flex: none; resize: both; overflow: auto; width: calc(21% - 11px); height: 360px; min-width: 190px; min-height: 160px; max-width: 100%; }
+.mp-bottom > .mp-card:not(.mp-transcript) { max-height: none; }
+.mp-bottom > .mp-transcript { width: calc(58% - 11px); height: 65vh; }
+.mp-card h3 { flex-shrink: 0; }
+.mp-lines { min-height: 0; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.mp-lines p { flex-shrink: 0; overflow-wrap: anywhere; }
+@media (max-width: 1000px) { .mp-bottom > .mp-card, .mp-bottom > .mp-transcript { width: 100%; resize: vertical; } }

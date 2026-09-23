@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useFollowScroll } from '../hooks/useFollowScroll';
 
 const LABELS = {
   'call.started': ['Call started', 'vapi'],
@@ -46,13 +46,20 @@ function describe(e) {
   }
 }
 
-export default function Timeline({ events }) {
-  const endRef = useRef(null);
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [events.length]);
+export default function Timeline({ events, collapsed, onToggleCollapse }) {
+  const { scrollRef, onScroll, paused, jumpToLatest } = useFollowScroll(events[0]?.callId, events.at(-1)?.id);
   return (
-    <section className="card timeline">
-      <header className="card-head"><h2>Event timeline</h2><span className="muted">{events.length} events</span></header>
-      <ol>
+    <section className={`card timeline ${collapsed ? 'collapsed' : ''}`}>
+      <header className="card-head">
+        <h2>Event timeline</h2>
+        <div className="card-head-actions">
+          <span className="muted">{events.length} events</span>
+          <button type="button" className="collapse-btn" onClick={onToggleCollapse} aria-label={collapsed ? 'Expand timeline panel' : 'Collapse timeline panel'}>{collapsed ? '▸' : '▾'}</button>
+        </div>
+      </header>
+      <div className="card-body">
+      {paused && <button onClick={jumpToLatest}>Jump to latest</button>}
+      <ol ref={scrollRef} onScroll={onScroll} tabIndex={0} aria-label="Call event timeline">
         {events.map((e) => {
           const [label, kind] = LABELS[e.type] || [e.type, 'other'];
           return (
@@ -64,8 +71,8 @@ export default function Timeline({ events }) {
           );
         })}
         {!events.length && <li className="muted empty">Events will appear here as the call progresses.</li>}
-        <li ref={endRef} />
       </ol>
+      </div>
     </section>
   );
 }

@@ -1,99 +1,75 @@
 <claude-mem-context>
 # Memory Context
 
-# [AI-traige-] recent context, 2026-09-20 10:41am EDT
+# [AI-traige-] recent context, 2026-09-20 12:37pm EDT
 
 Legend: 🎯session 🔴bugfix 🟣feature 🔄refactor ✅change 🔵discovery ⚖️decision 🚨security_alert 🔐security_note
 Format: ID TIME TYPE TITLE
 Fetch details: get_observations([IDs]) | Search: mem-search skill
 
-Stats: 50 obs (17,000t read) | 890,124t work | 98% savings
+Stats: 50 obs (18,911t read) | 364,734t work | 95% savings
 
 ### Sep 20, 2026
-744 3:13a 🔵 MongoDB Connection Module Uses MONGODB_URI and MONGODB_DB Env Vars
-745 " 🔵 MongoDB Backend Schema Fully Defined But MONGODB_URI Missing from .env
-747 3:27a 🔵 MongoDB Not Installed Locally on Windows — Atlas Required
-748 3:41a ⚖️ Database Backend Switched from MongoDB to Supabase
-749 3:45a ⚖️ Database Backend Reverted Back to MongoDB Atlas
-750 3:58a 🚨 MongoDB Atlas Credentials Shared in Plaintext in Chat
-751 " 🚨 All Production API Keys Exposed in Session Transcript via .env Read
-752 " ✅ MONGODB_URI and MONGODB_DB Added to .env
-754 " 🔵 TCP Connectivity to Atlas Port 27017 Confirmed — Machine Public IP Identified
-753 3:59a 🔵 MongoDB Atlas Cluster DNS Resolves — 3-Shard Cluster Confirmed Reachable
-755 " ✅ MongoDB Atlas Network Access IP Whitelist Configured by User
-756 " 🔵 TLS Handshake to Atlas Fails with WSAECONNRESET — IP Whitelist Likely Not Active Yet
-757 4:08a 🔵 User Switched to Different Network to Bypass SNI Filtering
-758 " 🔵 TLS Block Persists After Network Switch — Confirmed Machine-Level Filtering
-759 4:14a 🔵 Atlas TLS Block Was IP Whitelist Issue — New Network Has Different IP Not Yet Whitelisted
-760 4:15a 🟣 MongoDB Atlas Connection Authenticated and Verified — Database "agent-triage" Reachable
-761 " 🟣 db.js Created — CommonJS MongoDB Persistence Layer for Triage Calls
-769 4:30a 🟣 SMS confirmation always includes real location via DEFAULT_LOCATION fallback
-770 " 🔄 buildOpenAIBody merges Vapi native tools with custom function tools
-771 " 🟣 Same-day booking hard-blocked in cal-booking.js slot selection
-772 " ⚖️ Disposition ladder simplified from 3-tier to 2-tier (emergency/routine)
-818 6:33a 🔵 check-db.js Utility Script Exists for MongoDB Atlas Connectivity Verification
-781 6:45a 🟣 Warm emergency transfer to demo operator implemented end-to-end
-782 " 🟣 office-config.js created as single source of truth for practice details
-783 " 🟣 Assistant renamed Sarah → David, system prompt updated for demo transfer context
-784 " 🔄 server.js major refactor: sendCompletion extracted, resolveCompletion injectable, executeTool hardened
-785 " 🟣 Test suite expanded from 9 to 19 tests covering transfer, patient save, and slot selection
-786 " 🔄 db.js hardened: savePatientInfo returns false, DNS config, MongoClient timeouts added
-787 6:46a ✅ Server restarted with current code after stale process detected; live deployment verified
-788 9:43a ✅ Full session summary: warm transfer + disposition + SMS + booking enforcement all deployed
-S282 Full project audit requested — verified all work done/not done, ran live smoke test, surfaced open questions about assistant name and transfer number (Sep 20, 9:43 AM)
-789 9:44a 🟣 smoke-live.js created: synthetic end-to-end integration test for transfer tool passthrough
-790 " 🔵 Assistant was already named "David" from a prior commit; "Sarah" is the older name
-791 " 🔵 smoke-live.js: transfer passthrough confirmed working; Atlas connectivity failing with ECONNRESET
-S283 Replace AgentPhone SMS with Twilio for outbound appointment confirmation texts — user provided trial number +17372583742 and Account SID [REDACTED_TWILIO_ACCOUNT_SID], awaiting Auth Token to complete wiring (Sep 20, 9:45 AM)
-792 9:54a ⚖️ Twilio SMS migration started: trial number +17372583742 provided, AgentPhone to be replaced
-793 " 🔄 agentphone-sms.js now imports DOCTOR_NAME and OFFICE_LOCATION from office-config.js
-794 " 🟣 twilio-sms.js created: drop-in replacement for agentphone-sms.js using Twilio Messages API
-795 9:55a 🟣 server.js switched to twilio-sms.js; .env scaffolded with Twilio credentials placeholders
-796 " 🔵 agentphone-sms.test.js imports directly from agentphone-sms — requires separate twilio-sms.test.js, not an update
-S284 Twilio SMS integration — live test revealed trial account blocks all free-text SMS (error 572006); investigating workarounds or upgrade path (Sep 20, 9:57 AM)
-S285 Twilio trial SMS — probed for appointment-related template names; only 'sms_delivery_updates' confirmed valid; no appointment-specific template exists; upgrade to paid account is the fix (Sep 20, 9:59 AM)
 S287 Twilio trial SMS limitation fully exhausted — Content API also blocked (error 20003); upgrading to paid account is the only path to send real appointment confirmation content (Sep 20, 10:04 AM)
 S288 Twilio SMS integration for appointment confirmation texts — full implementation complete and tested; blocked by trial account restrictions; upgrade to paid is the only fix (Sep 20, 10:04 AM)
 S286 Twilio trial SMS template exploration complete — 'sms_appointment_reminders' found but sends wrong fixed date/time; decision needed: upgrade to paid or leave SMS off for now (Sep 20, 10:04 AM)
 S289 Full system readiness check complete — voice/booking/doctor notes/transfer all live; two blockers remain: MongoDB Atlas IP allowlist and Twilio trial restriction; user deciding whether to fix Atlas IP or test a live call now without DB persistence (Sep 20, 10:04 AM)
-808 10:07a ⚖️ SMS confirmation replaced with AgentMail email for demo — patient email set to nguyenthy1325@gmail.com
-809 " 🔵 Cal.com bookings confirmed working — 3 real bookings from caller +16572667556, all accepted for 2026-09-21
 S290 User pivoted from SMS to AgentMail email for appointment confirmations — demo patient email is nguyenthy1325@gmail.com; also asked to check last Twilio transaction and last call (Sep 20, 10:08 AM)
-810 10:13a 🔵 Server logs confirm real call happened — MongoDB upsertTranscript failed 18 times with SSL alert 80 (TLS internal error)
-811 10:14a 🔵 Most recent Cal.com booking confirmed stale — last real call was Julie at 02:20 UTC, no new call since
-812 " 🔵 Server log has no entries for book_appointment, doctor-notes, or transferCall — only DB error logged from end-of-call webhook
-813 10:15a 🔵 server.js book_appointment flow: SMS awaited inline; doctor notes and recordBooking are fire-and-forget — patient email can be added as third fire-and-forget
-814 " 🟣 patient-notification.js created — sends appointment confirmation email to nguyenthy1325@gmail.com via AgentMail after booking
-815 " 🟣 sendPatientConfirmationEmail wired into book_appointment as fire-and-forget — emails nguyenthy1325@gmail.com on every booking
-816 10:16a 🔴 Existing tests will call real sendPatientConfirmationEmail — need to add mock to test deps
-817 " 🔴 patient-save.test.js also missing sendPatientConfirmationEmail mock — will call real AgentMail in tests
-819 " 🔵 MongoDB Atlas Connection Failing with MongoServerSelectionError
-820 " 🔵 MongoDB Atlas Unreachable Even Outside Claude Sandbox — IP Allowlist Likely Culprit
-S291 Wire AgentMail to send appointment confirmation emails to demo patient (nguyenthy1325@gmail.com) after each successful booking, and verify the full pipeline works end-to-end (Sep 20, 10:18 AM)
-**Investigated**: - patient-save.test.js deps object (was missing sendPatientConfirmationEmail mock — would have called real AgentMail during tests)
-    - Running node processes (PID 47912: server.js, PID 8952: stale check-db.js)
-    - Server health at both localhost:3000 and ngrok tunnel (bulbar-gruntingly-roxy.ngrok-free.dev)
-    - Live AgentMail send to nguyenthy1325@gmail.com with test booking data (2026-10-01T14:00:00Z, America/New_York)
+S291 Wire AgentMail to send appointment confirmation emails to demo patient (nguyenthy1325@gmail.com) after each successful booking, and verify the full pipeline works end-to-end (Sep 20, 10:13 AM)
+S292 End-to-end health check of the AI-Triage voice assistant system (Sep 20, 10:18 AM)
+843 11:58a 🔵 All Patches Confirmed Applied and Syntactically Valid — git diff Shows 14 Files Changed
+844 " 🔵 Vapi Phone Number +19485298301 Has No Assistant Attached (assistantId: null)
+845 " 🔵 Several New Files Are Untracked in Git — Not Yet Committed
+847 12:00p 🟣 Phone Number +19485298301 Successfully Attached to New Assistant d7922044-b716-46b1-a96b-80970e89bafe
+848 " 🟣 Handoff Guard Endpoint Verified End-to-End: Returns transferSuccessful on Valid Acceptance
+850 " 🔵 voice-config.js Confirmed: Shared ElevenLabs Chris Voice Used by Both David and Transfer Assistant
+849 12:01p 🔵 MongoDB Atlas Still Unreachable After Server Restart — Root Cause of "Unable to Load Saved Calls"
+851 12:04p ✅ Voice Switched from ElevenLabs Chris to Vapi Elliot; Dashboard Label Hard-Coded as "ElevenLabs"
+852 " 🔵 Vite Frontend Build Fails with spawn EPERM — Same Windows Sandbox Restriction as Test Runner
+853 " 🟣 Frontend Production Build Succeeded with Escalated Permissions — dist/ Updated
+854 " 🔵 MongoDB Atlas Failure Confirmed NOT Caused by Sandbox Network Restrictions
+856 " 🔵 MongoDB Atlas Failure Root Cause Is TLS Alert, Not IP Allowlist — ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR
+864 12:07p 🔵 MONGODB_URI Appears to Point to Localhost (127.0.0.1:27017), Not Atlas — Explains All Connection Failures
+855 12:08p 🔵 AI-Triage Project State: Server Healthy, Large Uncommitted Diff
+866 " 🔵 Machine's Public IP Confirmed as 172.56.194.255 — Must Be Added to MongoDB Atlas Network Access List
+857 " 🔵 voice-config.js Uses Vapi/Elliot — Separate from Main 11labs David Assistant
+858 " 🔵 All Required Third-Party API Keys Confirmed Present in Environment
+859 12:09p 🔵 Config Mismatch: Running Server Serves Stale 11labs Config Despite Code Now Using Vapi/Elliot
+862 " 🔵 Full Isolated Test Suite: 34/34 Passing in 612ms
+863 " 🔵 Vapi Phone Number +19485298301 Attached to Assistant d7922044-b716-46b1-a96b-80970e89bafe
+860 12:10p 🔵 MongoDB Atlas Connection Failing: DNS SRV Lookup ECONNREFUSED
+861 " 🔵 Fresh Node Process Confirms: Source Code Voice Config is Vapi/Elliot (Not 11labs)
+865 12:11p 🔵 Live Vapi Assistant Uses Ngrok Tunnel for Custom LLM — Single Point of Failure
+867 " 🔵 Ngrok Tunnel Active and Healthy — 860 Requests Served, But p99 Latency Critically High
+869 " 🔵 New Modules booking-once and handoff Wired Into server.js; savedCall Frontend-Only
+868 12:12p 🔵 Vapi API Confirmed Both Main and Transfer Assistants Use Vapi Elliot; Dashboard Bundle Shows "ElevenLabs" Label
+870 " 🔵 Server PID on Port 3000 Changed to 105944 — Previous Process 105352 No Longer Exists
+871 " 🔵 Server Confirmed as project backend (node.exe server.js), Restarted as PID 106396
+S293 End-to-end verification excluding SMS, with voice provider shown as 11labs (ElevenLabs) instead of Vapi (Sep 20, 12:13 PM)
+872 12:14p 🔵 System Fully Operational — Local and Public Dashboard Both Return HTTP 200 After Final Restart
+873 " 🔵 MongoDB Atlas Now Accessible with Escalated Permissions — 6 Call Records Confirmed in agent-triage DB
+874 " 🔵 Server MongoDB Connection Fails in Non-Escalated Context Despite Atlas Being Reachable via Escalated Check
+890 " 🔵 Final check-live.js Confirms Full System Operational — All Checks Pass Except MongoDB in Standard Sandbox
+876 12:15p ⚖️ Voice Provider Switch: Vapi → 11labs (ElevenLabs) for Elliot Voice
+S294 Verify frontend displays "ElevenLabs" voice label (instead of Vapi) across all UI surfaces; confirm SMS excluded and all other features work (Sep 20, 12:15 PM)
+875 12:16p 🔴 /api/calls Now Returns HTTP 200 with 6 Records — MongoDB Atlas Connectivity Fully Restored
+877 12:18p ✅ Frontend Vite Dev Server Started on Port 5173
+878 " 🔵 Bun Package Manager and Browse Tool Available; Dashboard Access Initiated
+879 12:19p 🔵 Bun 1.3.10 and Browse Binary Verified; Both Ready for Use
+881 12:20p 🔵 Browse Tool Server Not Initializing; State File Not Created; Repetitive Startup Loop
+880 12:21p 🔵 Browse Tool Starts Successfully But Commands Not Completing; Server Initialization Ongoing
+882 " 🔵 Browse Tool Non-Functional in This Environment; Cannot Navigate or Screenshot
+883 " 🔵 Browse Tool Does Not Spawn Server or Interact with 60+ Running Chrome Processes
+S295 End-to-end UI verification of dashboard; attempted automated screenshot via browse tool; discovered tool non-functional (Sep 20, 12:21 PM)
+884 12:22p 🔵 64 Windowed Chrome Processes Running; All Non-Headless
+885 12:23p 🔵 64 Chrome Processes Are User's Active Browser Session, Not Orphaned Automation; Browse Tool Failure Separate
+886 " 🔵 Frontend Dashboard Layout: Grid-Based with Responsive Resizable Cards; Dark Theme with Animations
+887 12:24p 🔵 Frontend Components Verified: Transcript, CallList, Pipeline, Timeline All Properly Structured
+888 12:26p 🟣 Panel Collapse State Management Implemented; LocalStorage Persistence Added
+889 " 🟣 Collapsible Panel UI Implementation Underway; CallList Header Restructured with Collapse Button
+891 " 🟣 Pipeline and Timeline Panels Implement Collapse UI; Dual-State Pattern for Path Expansion
+892 " 🟣 Transcript Panel Collapse Implementation Complete; Restructured Header with Actions
+893 " 🔴 Saved Calls Endpoint Fully Restored — Both Local and Public ngrok URLs Return HTTP 200 with Records
 
-**Learned**: - AgentMail send is confirmed working: test POST returned message_id &lt;010001a0bf2d0718-03f02eb7-e177-4a44-8e02-0a11b0d70572-000000@email.amazonses.com&gt; and thread_id 3bf4fa55-9631-4d0c-b6f7-fb1a956a27fe — email delivered via Amazon SES
-    - buildConfirmation() from twilio-sms.js correctly formats the email body with doctor name, appointment time (localized to America/New_York), and office location
-    - Server restart was needed: stale PID 47912 predated patient-notification.js being wired into server.js; new process is now running with the full feature active
-    - Both local and ngrok health checks return {"ok":true} — server is up and reachable by Vapi
-    - Twilio trial SMS remains blocked (error 572006 on free-text Body) but email path is fully independent and working
-    - MongoDB Atlas TLS rejection (SSL alert 80) from IP 172.56.193.143 is still an open issue — all recordBooking/upsertTranscript calls will fail until Atlas IP allowlist is updated
-
-**Completed**: - Added sendPatientConfirmationEmail: async () => {} mock to patient-save.test.js deps object
-    - All 24 tests pass (0 fail) — no live HTTP calls during test runs
-    - Sent real test confirmation email via AgentMail to nguyenthy1325@gmail.com — confirmed delivered (Amazon SES message_id returned)
-    - Killed stale server process (PID 47912) and restarted server.js with new patient-notification.js wiring active
-    - Server health confirmed at both localhost:3000 and public ngrok tunnel
-    - Full booking-to-email pipeline is now live: book_appointment → sendPatientConfirmationEmail(booking) fire-and-forget → AgentMail POST → nguyenthy1325@gmail.com
-
-**Next Steps**: - User should check nguyenthy1325@gmail.com inbox to confirm the test email landed correctly (subject: "Your appointment is confirmed", body should show Doctor Moyo, Oct 1 2026 10:00 AM EDT, MIT School of Nursing Left Wing)
-    - Make a real booking call through Vapi to trigger the full end-to-end flow and verify the email arrives with actual booking data
-    - Fix MongoDB Atlas IP allowlist: add 172.56.193.143 (or 0.0.0.0/0) at cloud.mongodb.com → Network Access → IP Access List so recordBooking and upsertTranscript stop failing
-    - Twilio upgrade: deferred to user — when account is upgraded from trial, twilio-sms.js will send real appointment content with zero code changes
-
-
-Access 890k tokens of past work via get_observations([IDs]) or mem-search skill.
+Access 365k tokens of past work via get_observations([IDs]) or mem-search skill.
 </claude-mem-context>

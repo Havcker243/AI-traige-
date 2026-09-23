@@ -16,7 +16,8 @@ function getClient() {
   if (!uri) return null;
   if (!clientPromise) {
     const client = new MongoClient(uri, { serverSelectionTimeoutMS: 5000, connectTimeoutMS: 5000 });
-    clientPromise = client.connect().then(() => client).catch((err) => {
+    clientPromise = client.connect().then(() => client).catch(async (err) => {
+      await client.close().catch(() => {});
       clientPromise = null;
       throw err;
     });

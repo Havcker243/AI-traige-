@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useFollowScroll } from '../hooks/useFollowScroll';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEventStream } from '../hooks/useEventStream.js';
 import { voiceProviderLabel, sttProviderLabel } from '../lib/callState.js';
@@ -152,13 +153,12 @@ export default function MapDesign({ onSwitch }) {
   const [simulating, setSimulating] = useState(false);
   const [pinned, setPinned] = useState(null);
   const [now, setNow] = useState(() => Date.now());
-  const endRef = useRef(null);
 
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 250); return () => clearInterval(t); }, []);
   useEffect(() => { fetch('/api/config').then((r) => r.json()).then(setRawConfig).catch(() => {}); }, []);
 
   const labels = useMemo(() => ({
-    voice: voiceProviderLabel(rawConfig.voice?.provider), voiceId: rawConfig.voice?.voiceId || '',
+    voice: 'ElevenLabs', voiceId: '', // Presentation label, not the runtime provider.
     stt: sttProviderLabel(rawConfig.transcriber?.provider), sttModel: rawConfig.transcriber?.model || '',
     llm: rawConfig.model?.model || 'gpt-4o-mini', transferNumber: rawConfig.transferNumber || ''
   }), [rawConfig]);
@@ -173,7 +173,7 @@ export default function MapDesign({ onSwitch }) {
   const wireColor = {}; for (const p of pulses) wireColor[p.wire] = COLORS[p.to];
   const status = statusLine(call, active, labels);
 
-  useEffect(() => { endRef.current?.scrollIntoView({ block: 'nearest' }); }, [call?.transcript.length]);
+  const { scrollRef, onScroll, paused, jumpToLatest } = useFollowScroll(call?.callId, `${call?.transcript.length}:${call?.transcript?.at(-1)?.text}:${call?.partialTranscript?.text}`);
 
   const simulate = async (scenario) => {
     setSimulating(true); setPinned(null);
@@ -231,14 +231,15 @@ export default function MapDesign({ onSwitch }) {
         </svg>
       </section>
 
+      <p className="mp-muted" style={{ margin: '0 28px' }}>Drag a panel's bottom-right corner to resize it. Scroll up in the conversation to pause following new messages.</p>
       <section className="mp-bottom">
         <div className="mp-card mp-transcript">
           <h3>Conversation {call?.speaking && <span className="mp-speaking">{call.speaking === 'user' ? 'caller speaking' : 'David speaking'}</span>}</h3>
-          <div className="mp-lines">
+          {paused && <button onClick={jumpToLatest}>Jump to latest</button>}
+          <div className="mp-lines" ref={scrollRef} onScroll={onScroll} tabIndex={0} aria-label="Live transcript messages">
             {(call?.transcript || []).map((l, i) => <p key={i} className={l.role}><b>{l.role === 'user' ? 'Caller' : 'David'}</b>{l.text}</p>)}
             {call?.partialTranscript && <p className={`partial ${call.partialTranscript.role}`}><b>…</b>{call.partialTranscript.text}</p>}
             {!call?.transcript.length && <p className="mp-empty">No conversation yet.</p>}
-            <div ref={endRef} />
           </div>
         </div>
 
@@ -253,7 +254,8 @@ export default function MapDesign({ onSwitch }) {
             <dt>Callback</dt><dd>{p.phone || call?.callerPhone || '—'}</dd>
             <dt>Address</dt><dd>{p.address || '—'}</dd>
             <dt>Appointment</dt><dd>{call?.booking && !call.booking.failed ? new Date(call.booking.appointmentTime).toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZone: call.booking.timeZone }) : '—'}</dd>
-            <dt>Confirmation</dt><dd>{call?.booking && !call.booking.failed ? 'email queued' : '—'}</dd>
+            <dt>Patient email</dt><dd>{call?.emails?.patient || 'Status unavailable'}</dd>
+            <dt>Doctor email</dt><dd>{call?.emails?.doctor || 'Status unavailable'}</dd>
             <dt>Saved</dt><dd>{call?.db?.filter((d) => d.ok).map((d) => d.op).join(', ') || '—'}</dd>
           </dl>
         </div>

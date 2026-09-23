@@ -3,12 +3,19 @@ function fmtTime(ts) {
   return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-export default function CallList({ liveCalls, history, selectedId, onSelect }) {
+export default function CallList({ liveCalls, history, selectedId, onSelect, collapsed, onToggleCollapse }) {
   const liveIds = new Set(liveCalls.map((c) => c.callId));
   const past = history.filter((h) => !liveIds.has(h.callId));
   return (
-    <aside className="card calls">
-      <header className="card-head"><h2>Calls</h2><span className="muted">{liveCalls.length} live</span></header>
+    <aside className={`card calls ${collapsed ? 'collapsed' : ''}`}>
+      <header className="card-head">
+        <h2>Calls</h2>
+        <div className="card-head-actions">
+          <span className="muted">{liveCalls.length} live</span>
+          <button type="button" className="collapse-btn" onClick={onToggleCollapse} aria-label={collapsed ? 'Expand calls panel' : 'Collapse calls panel'}>{collapsed ? '▸' : '▾'}</button>
+        </div>
+      </header>
+      <div className="card-body">
       <ul>
         {liveCalls.map((c) => (
           <li key={c.callId || 'none'} className={`call-item ${selectedId === (c.callId || '__no_call__') ? 'selected' : ''}`} onClick={() => onSelect(c.callId || '__no_call__')}>
@@ -38,6 +45,7 @@ export default function CallList({ liveCalls, history, selectedId, onSelect }) {
         ))}
         {!liveCalls.length && !past.length && <li className="muted empty">No calls yet. Start a simulation or place a call.</li>}
       </ul>
+      </div>
     </aside>
   );
 }

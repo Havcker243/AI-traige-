@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { STAGES, TOOL_STAGES } from '../lib/callState.js';
 
 function stageState(call, stage) {
@@ -52,13 +53,19 @@ function stageDetail(call, stage, config) {
   }
 }
 
-export default function Pipeline({ call, config }) {
+export default function Pipeline({ call, config, collapsed, onToggleCollapse }) {
+  const [pathExpanded, setPathExpanded] = useState(false);
   return (
-    <section className="pipeline card">
+    <section className={`pipeline card ${collapsed ? 'collapsed' : ''} ${pathExpanded ? 'expanded' : ''}`}>
       <header className="card-head">
         <h2>Live pipeline</h2>
-        <span className="muted">{call ? (call.status === 'ended' ? 'Call finished' : 'In progress') : 'Waiting for a call'}</span>
+        <div className="card-head-actions">
+          <span className="muted">{call ? (call.status === 'ended' ? 'Call finished' : 'In progress') : 'Waiting for a call'}</span>
+          <button type="button" className="ghost small-btn" onClick={() => setPathExpanded((v) => !v)}>{pathExpanded ? 'Collapse path' : 'Expand path'}</button>
+          <button type="button" className="collapse-btn" onClick={onToggleCollapse} aria-label={collapsed ? 'Expand pipeline panel' : 'Collapse pipeline panel'}>{collapsed ? '▸' : '▾'}</button>
+        </div>
       </header>
+      <div className="card-body">
       <div className="stages">
         {STAGES.map((stage, i) => {
           const state = stageState(call, stage);
@@ -87,6 +94,7 @@ export default function Pipeline({ call, config }) {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

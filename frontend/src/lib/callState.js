@@ -135,13 +135,16 @@ export function applyEvent(calls, event) {
         if (d.success) {
           call.booking = { appointmentTime: d.result.appointmentTime, timeZone: d.result.timeZone, location: d.result.location, doctorName: d.result.doctorName };
           call.sms = d.result.sms || null;
-        } else {
-          call.booking = { failed: true, error: d.result.error };
+          } else if (!call.booking || call.booking.failed) {
+            call.booking = { failed: true, error: d.result.error };
         }
       }
       break;
     }
-    case 'transfer.returned':
+      case 'email.status':
+        call.emails = { ...call.emails, [d.kind]: d.status };
+        break;
+      case 'transfer.returned':
       call.activeStage = 'tools';
       call.activeTool = 'transferCall';
       call.transfer = { destination: d.destination, ts: event.ts };

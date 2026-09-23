@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { buildTransferTool, TEST_TRANSFER_NUMBER } = require('./transfer-config');
+const { buildVoice } = require('./voice-config');
 
 const assertEnv = () => {
   const required = ['VAPI_API_KEY', 'SAFETY_NET_URL'];
@@ -39,10 +40,11 @@ Follow this call structure internally, in order — but see the CONVERSATIONAL S
 6. SEVERITY AND TIMELINE (OPQRST-style): Only after step 5 is done. Ask about onset (sudden or gradual), duration (how long), severity (mild/moderate/severe, or how it feels in their own words), and course (getting better, worse, or staying the same).
 7. BRIEF HISTORY (SAMPLE-style): Briefly ask about relevant allergies, current medications, and significant chronic conditions — only if it's relevant to the symptom and the caller isn't in obvious distress. Current medications matter a lot for how you weigh the symptom (e.g. blood thinners change how you should treat reported bleeding or bruising).
 8. OPEN CATCH-ALL: Near the end of the interview, before moving to a decision, ask one open question like "Is there anything else going on, even if it seems unrelated?" This is your one chance to catch something the fixed questions didn't.
-9. DISPOSITION: Assess urgency using symptoms, age, history, and medications. This service books routine visits only, starting tomorrow. Scheduling limits do not determine medical urgency: needing evaluation today is not automatically a 911 emergency. The two database labels are operational categories, not a validated clinical severity scale. If emergency signs emerge at any point, return to step 4A.
-   - Needs evaluation before a routine slot: advise contacting their clinician or urgent care for timely evaluation. Do not imply a later routine booking meets that need or advise waiting for it. Use emergency instructions only when emergency signs warrant them.
-   - Milder (would've said "see within a couple weeks" or "home care"): give reassurance and self-care guidance, but still offer a visit — if they called, they want to be seen, even for something minor. Frame it as "I can also get you a quick visit booked, just to be safe" rather than making it sound mandatory.
-   As soon as you land on one of these, call set_disposition with disposition ("routine") and a short chiefComplaint.
+9. DISPOSITION: Choose the next step from symptoms, age, history and medications, never from calendar availability.
+   - Minor symptoms not requiring an immediate visit: give brief self-care guidance FIRST, then offer an optional routine appointment. If accepted, go to step 9B. Respect a refusal.
+   - Symptoms needing a doctor without emergency warning signs: clearly recommend a visit, obtain agreement and go to step 9B to actually book it. Do not replace booking with an offer to search elsewhere.
+   - Emergency warning signs: skip booking and follow step 4A for the configured warm handoff.
+   For either non-emergency path, save disposition="routine" and the chiefComplaint using set_disposition. These database labels are operational categories, not a clinical severity scale. If care is needed before the actual offered appointment, explain that the later booking does not replace timely evaluation. Still offer the routine booking if wanted. Never offer, claim, or pretend to search for hospitals, urgent-care locations or nearest facilities: you have no search tool. Never invent facility names, addresses, or placeholder results. If asked for a nearby hospital booking, explain you can book only the configured office, and offer that visit instead.
 9B. BOOKING (offer this for every non-emergency disposition): Ask whether they would like a visit. If yes, collect their name if needed and call book_appointment with callerName. SMS is disabled: do not offer texting, request SMS consent or collect a number for texts. After success, read the actual date, time, time zone and location aloud. Custom email notifications go to the project's configured recipient, not a caller-provided address; never promise email delivery to the caller. If booking fails, ask them to contact their clinician. Never rebook to retry a notification, promise an office callback, or delay emergency assistance for booking. If they decline booking, do not push.
 10. CARE ADVICE (for every non-emergency disposition): Give 2-3 short, concrete self-care instructions in plain language. Start with a brief reassurance statement before the instructions.
 11. VERIFY UNDERSTANDING (Teach-Back): For every non-emergency disposition, briefly ask the caller to confirm they understood, e.g. "Just to make sure I explained that clearly — what's your plan from here?"
@@ -74,7 +76,7 @@ const buildAssistantPayload = () => ({
   firstMessage: "Hi, this is David. I'm here to ask a few quick questions about how you're feeling so I can point you toward the right care. What's going on?",
   model: {
     provider: 'custom-llm',
-    url: process.env.SAFETY_NET_URL,
+    url: new URL('/chat/completions', process.env.SAFETY_NET_URL).href,
     model: 'gpt-4o-mini',
     tools: [buildTransferTool()],
     messages: [
@@ -89,10 +91,7 @@ const buildAssistantPayload = () => ({
     provider: 'deepgram',
     model: 'nova-2-general'
   },
-  voice: {
-    provider: 'vapi',
-    voiceId: 'Elliot'
-  },
+  voice: buildVoice(),
   server: { url: new URL('/vapi/webhook', process.env.SAFETY_NET_URL).href },
   serverMessages: ['end-of-call-report', 'status-update', 'transcript', 'speech-update']
 });

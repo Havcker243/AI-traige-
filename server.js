@@ -4,6 +4,8 @@ const path = require('path');
 const express = require('express');
 const { EMERGENCY_MESSAGE, checkMessagesForRedFlags } = require('./red-flags');
 const { createBooking } = require('./cal-booking');
+const { bookOnce } = require('./booking-once');
+const { resolveHandoff } = require('./handoff');
 const { sendDoctorNotes } = require('./doctor-notes');
 // SMS is disabled; confirmations are sent through patient-notification.
 const { sendPatientConfirmationEmail } = require('./patient-notification');
@@ -19,7 +21,7 @@ const { simulateCall } = require('./simulate-call');
 
 const BOOKING_INSTRUCTIONS = {
   role: 'system',
-  content: 'Booking update: SMS is disabled. Do not offer texts, ask for texting permission, or collect an SMS number. After the caller agrees to book, call book_appointment with callerName. Read the confirmed date, time, time zone and location aloud. A custom confirmation email goes to the configured project inbox, not a caller-provided address; do not promise email delivery to the caller. Never rebook to retry a notification.'
+  content: 'Booking update: For minor symptoms, give self-care guidance first, then offer an optional appointment. For symptoms needing a doctor without emergency warning signs, recommend a visit and invoke book_appointment once the caller agrees. For emergency warning signs, follow the emergency handoff instead of booking. Calendar availability must not determine symptom urgency or cause you to abandon a requested routine booking. Never offer or pretend to search for hospitals or urgent-care locations: no search tool exists. If care is needed before the available appointment, explain that the later booking does not replace timely care. SMS is disabled. Do not offer texts or collect SMS consent. Book with callerName, then read the actual date, time, time zone and location aloud. Confirmation emails go to the configured project recipient; do not promise delivery to the caller. Never rebook to retry a notification.'
 };
 
 const dashboardDist = path.join(__dirname, 'frontend', 'dist');
@@ -49,7 +51,7 @@ function trackDb(op, callId, action) {
     operation = action();
   } catch (error) {
     emitEvent('db.failed', callId, { op, error: error.message });
-    return Promise.resolve();
+    return Promise.reject(error);
   }
   return Promise.resolve(operation)
     .then((result) => {
@@ -231,6 +233,16 @@ async function callOpenAI(body) {
   return res.json();
 }
 
+async function notifyEmail(kind, callId, action) {
+  emitEvent('email.status', callId, { kind, status: 'sending' });
+  try {
+    await action();
+    emitEvent('email.status', callId, { kind, status: 'sent', note: 'Provider accepted; inbox delivery unconfirmed.' });
+  } catch {
+    emitEvent('email.status', callId, { kind, status: 'failed' });
+  }
+}
+
 async function executeTool(toolCall, context, dependencies = {}) {
   const deps = {
     createBooking, sendDoctorNotes, sendPatientConfirmationEmail,
@@ -270,21 +282,22 @@ async function executeTool(toolCall, context, dependencies = {}) {
   }
 
   if (toolCall.function.name === 'book_appointment') {
+    return bookOnce(context.callId, async () => {
     try {
       const booking = await deps.createBooking({ name: args.callerName, phone: context.callerPhone });
       Promise.resolve()
         .then(() => deps.getPatientInfo(context.callId))
         .catch(() => ({}))
-        .then((patient) => deps.sendDoctorNotes({
+        .then((patient) => notifyEmail('doctor', context.callId, () => deps.sendDoctorNotes({
           messages: context.messages,
           bookingStart: booking.start,
           callerPhone: context.callerPhone,
           patient
-        }))
+        })))
         .catch((err) => console.error('[doctor-notes] send failed:', err.message));
       trackDb('booking', context.callId, () => deps.recordBooking(context.callId, booking))
         .catch((err) => console.error('[db] recordBooking failed:', err.message));
-      deps.sendPatientConfirmationEmail(booking).catch((err) => console.error('[patient-notification] send failed:', err.message));
+      notifyEmail('patient', context.callId, () => deps.sendPatientConfirmationEmail(booking));
 
       return JSON.stringify({
         success: true,
@@ -298,6 +311,7 @@ async function executeTool(toolCall, context, dependencies = {}) {
       console.error('[book_appointment] failed:', err.message);
       return JSON.stringify({ success: false, error: 'Booking could not be confirmed. Ask the caller to contact the office; do not promise an automatic callback.' });
     }
+    });
   }
 
   return JSON.stringify({ success: false, error: 'Unknown tool' });
@@ -419,6 +433,15 @@ function sendCompletion(res, { content, toolCalls, callId = null }, model, strea
   res.end('data: [DONE]\n\n');
 }
 
+app.post('/handoff/chat/completions', async (req, res) => {
+  try {
+    const result = await resolveHandoff(req.body, callOpenAI);
+    sendCompletion(res, result, 'gpt-4o-mini', req.body.stream === true);
+  } catch {
+    res.status(502).json({ error: 'Handoff unavailable; connection has not been authorized.' });
+  }
+});
+
 app.post('/chat/completions', async (req, res) => {
   const { messages = [], model = 'gpt-4o-mini', stream = false } = req.body;
 
@@ -534,14 +557,18 @@ app.get('/events', (req, res) => {
   });
 });
 
+let historyUnavailable = false;
 app.get('/api/calls', async (req, res) => {
   const parsedLimit = Number.parseInt(req.query.limit, 10);
   const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(parsedLimit, 500) : 50;
   try {
-    res.json(await listCalls(limit));
+    const calls = await listCalls(limit);
+    historyUnavailable = false;
+    res.json(calls);
   } catch (error) {
-    emitEvent('error', null, { where: 'api/calls', message: error.message });
-    res.status(500).json({ error: 'Unable to load calls' });
+    if (!historyUnavailable) emitEvent('error', null, { where: 'api/calls', message: 'Saved call storage is unavailable. Live events can still appear.' });
+    historyUnavailable = true;
+    res.status(503).json({ error: 'Saved call storage is unavailable. Check the MongoDB connection; live events can still appear.' });
   }
 });
 

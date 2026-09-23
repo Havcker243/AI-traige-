@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { getEarliestSlot } = require('./cal-booking');
 const { SYSTEM_PROMPT } = require('./create-assistant');
+const completionUrl = new URL('/chat/completions', process.env.SAFETY_NET_URL).href;
 
 async function get(url, key) {
   const response = await fetch(url, {
@@ -25,11 +26,11 @@ async function main() {
     check('vapi', async () => {
       const numbers = await get('https://api.vapi.ai/phone-number', process.env.VAPI_API_KEY);
       const assistants = await get('https://api.vapi.ai/assistant', process.env.VAPI_API_KEY);
-      console.log(JSON.stringify({ check: 'assistant-candidates', result: assistants.map(a => ({ id: a.id, name: a.name, url: a.model?.url, proxyMatches: a.model?.url === process.env.SAFETY_NET_URL, promptMatches: a.model?.messages?.find(m => m.role === 'system')?.content === SYSTEM_PROMPT })) }));
+      console.log(JSON.stringify({ check: 'assistant-candidates', result: assistants.map(a => ({ id: a.id, name: a.name, url: a.model?.url, proxyMatches: a.model?.url === completionUrl, promptMatches: a.model?.messages?.find(m => m.role === 'system')?.content === SYSTEM_PROMPT })) }));
       return numbers.map(n => {
         const a = assistants.find(a => a.id === n.assistantId);
         return { number: n.number, assistantId: n.assistantId, name: a?.name,
-          proxyMatches: a?.model?.url === process.env.SAFETY_NET_URL,
+          proxyMatches: a?.model?.url === completionUrl,
           promptMatches: a?.model?.messages?.find(m => m.role === 'system')?.content === SYSTEM_PROMPT,
           voice: a?.voice, provider: a?.model?.provider,
           transfer: a?.model?.tools?.filter(t => t.type === 'transferCall').map(t => t.destinations?.map(d => ({ number: d.number, mode: d.transferPlan?.mode }))),

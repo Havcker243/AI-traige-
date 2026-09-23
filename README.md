@@ -100,6 +100,16 @@ or email formatter. Credentials in .env were left untouched.
 
 ## Demo transfer and current handoff
 
+The phone backend and dashboard run together on port 3000. After building the
+frontend (`cd frontend` then `npm run build`), start the root server and open
+`http://localhost:3000/dashboard/`. The public tunnel uses `/dashboard/` too.
+This no-login dashboard exposes actual call records to anyone with access to
+the link; it is intended for the test team. Keep the server and tunnel running.
+The assistant must be synced with `sync-assistant.js` to enable transcript,
+speech, status, and end-of-call webhook events. Saved calls load through
+`/api/calls/:id`; live calls use `/events` on the same server.
+Run `node run-isolated-tests.cjs` to test without connecting to the real MongoDB.
+
 
 The assistant now has Vapi's native `transferCall` tool configured for a warm
 transfer to **+1 (657) 266-7556**, the supplied test operator number. The destination
@@ -120,7 +130,7 @@ SSE. Only the fixed test destination is permitted. If Vapi reports a failed
 transfer and resumes the assistant, the prompt explains failure without claiming
 that help was sent. Do not assume a transfer request means the destination answered.
 
-The handoff assistant uses David's Elliot voice and the previous conversation.
+David and the handoff assistant use Vapi Elliot. The dashboard displays the requested custom label "ElevenLabs"; that label does not describe the runtime provider. The handoff assistant receives the previous conversation.
 It calls `transferSuccessful` after a human accepts, or `transferCancel` for
 rejection or automated answering. The fallback returns the caller to David.
 See [assistant-based warm transfers](https://docs.vapi.ai/calls/assistant-based-warm-transfer).
